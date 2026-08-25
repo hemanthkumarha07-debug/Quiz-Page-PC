@@ -98,7 +98,7 @@
     <!-- Header: Clean, Unboxed Logo & Techno Typography -->
     <header class="relative z-10 w-full px-6 py-6 flex items-center justify-between border-b border-white/5">
         <div class="flex items-center space-x-4">
-            <!-- Unboxed Logo -->
+            <!-- Top Left Logo -->
             <img src="PClogo.png" alt="Playcred" class="h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]" />
             <!-- Futuristic Typography -->
             <div class="flex flex-col justify-center">
@@ -115,10 +115,21 @@
     <main class="relative z-10 flex-grow flex items-center justify-center p-4 sm:p-8">
         <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden relative">
             
+            <!-- NEW: Center Background Logo Watermark -->
+            <img src="PClogo.png" id="center-watermark" alt="Watermark" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 md:w-96 opacity-[0.06] pointer-events-none transition-opacity duration-700 z-0 mix-blend-screen" />
+
+            <!-- NEW: HUD Targeting Reticles (Corners) -->
+            <div id="hud-elements" class="transition-opacity duration-700">
+                <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-turfGreen/30 rounded-tl-3xl z-10 pointer-events-none"></div>
+                <div class="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-turfGreen/30 rounded-tr-3xl z-10 pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-turfGreen/30 rounded-bl-3xl z-10 pointer-events-none"></div>
+                <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-turfGreen/30 rounded-br-3xl z-10 pointer-events-none"></div>
+            </div>
+
             <!-- Progress Line (Subtle) -->
             <div class="absolute top-0 left-0 h-1 bg-turfGreen transition-all duration-500 ease-out z-20" id="progress-bar" style="width: 0%;"></div>
 
-            <div class="p-8 sm:p-12">
+            <div class="p-8 sm:p-12 relative z-20">
                 
                 <!-- SCREEN 1: Welcome -->
                 <div id="screen-welcome" class="text-center fade-in">
@@ -128,8 +139,9 @@
                     <p class="font-sans text-gray-400 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed">
                         Secure your player profile, calibrate your skill level, and gain exclusive access to the community.
                     </p>
-                    <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(34,197,94,0.4)]">
-                        Initialize Profile
+                    <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(34,197,94,0.4)] relative overflow-hidden group">
+                        <span class="relative z-10">Initialize Profile</span>
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                     </button>
                 </div>
 
@@ -201,8 +213,9 @@
                     <p id="finish-desc" class="font-sans text-gray-400 font-light mb-10">Transmitting data to secure servers...</p>
                     
                     <div id="finish-action" class="hidden fade-in">
-                        <a id="whatsapp-redirect-btn" href="#" class="inline-block bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-techno font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.4)]">
-                            Enter the Community
+                        <a id="whatsapp-redirect-btn" href="#" class="inline-block bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-techno font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.4)] relative overflow-hidden group">
+                            <span class="relative z-10">Enter the Community</span>
+                            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                         </a>
                     </div>
                 </div>
@@ -224,10 +237,10 @@
 
         /* --- HD DYNAMIC BACKGROUNDS (Unsplash) --- */
         const sportBackgrounds = {
-            football: "https://images.unsplash.com/photo-1518605368461-1ee7c68ca1a7?auto=format&fit=crop&w=2500&q=80", // Stadium lights
-            cricket: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=2500&q=80",  // Cricket ground
-            badminton: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=2500&q=80", // Badminton court
-            pickleball: "https://images.unsplash.com/photo-1622226830501-8fc4d19d6756?auto=format&fit=crop&w=2500&q=80" // Hardcourt
+            football: "https://images.unsplash.com/photo-1518605368461-1ee7c68ca1a7?auto=format&fit=crop&w=2500&q=80", 
+            cricket: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=2500&q=80",  
+            badminton: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=2500&q=80", 
+            pickleball: "https://images.unsplash.com/photo-1622226830501-8fc4d19d6756?auto=format&fit=crop&w=2500&q=80" 
         };
 
         /* --- ASSESSMENT DATA --- */
@@ -280,6 +293,8 @@
 
         const progressBar = document.getElementById('progress-bar');
         const bgLayer = document.getElementById('dynamic-bg');
+        const centerWatermark = document.getElementById('center-watermark');
+        const hudElements = document.getElementById('hud-elements');
 
         function updateProgress(percentage) {
             progressBar.style.width = `${percentage}%`;
@@ -296,6 +311,15 @@
             const target = document.getElementById(`screen-${screenName}`);
             target.classList.remove('hidden');
             target.classList.add('fade-in');
+
+            // Handle HUD & Watermark logic
+            if (screenName === 'quiz' || screenName === 'finish') {
+                centerWatermark.style.opacity = '0';
+                hudElements.style.opacity = '0';
+            } else {
+                centerWatermark.style.opacity = '0.06';
+                hudElements.style.opacity = '1';
+            }
 
             if (screenName === 'details') updateProgress(25);
             if (screenName === 'finish') updateProgress(100);
