@@ -3,257 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playcred | Player Onboarding & Assessment</title>
+    <title>Playcred | Elite Turf Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importing Futuristic Techno Font (Orbitron) and Clean Sans (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        'techno': ['Orbitron', 'sans-serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
                     colors: {
                         turfGreen: '#22c55e',
-                        turfGreenGlow: '#10b981',
-                        turfDarkGreen: '#0f291e',
-                        turfBg: '#050806',
-                        turfCard: 'rgba(10, 16, 12, 0.75)',
+                        turfDark: '#050505',
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Base Dark Tactical Background */
         body {
-            background-color: #050806;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #000;
+            color: #fff;
             overflow-x: hidden;
         }
 
-        /* Tactical Pitch Background Grid & Design Strokes */
-        .tactical-bg {
+        /* Dynamic Full-Screen Image Background with Dark Overlay */
+        #dynamic-bg {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background-image: 
-                radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
-            pointer-events: none;
+            background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c68ca1a7?auto=format&fit=crop&w=2000&q=80'); /* Default Stadium */
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
         }
-
-        /* Tactical Vector Pitch Markings Overlay */
-        .pitch-lines {
-            position: fixed;
+        #dynamic-bg::after {
+            content: '';
+            position: absolute;
             inset: 0;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600' opacity='0.04' stroke='%23ffffff' stroke-width='2' fill='none'%3E%3Crect x='50' y='50' width='700' height='500' rx='10'/%3E%3Cline x1='400' y1='50' x2='400' y2='550'/%3E%3Ccircle cx='400' cy='300' r='80'/%3E%3Ccircle cx='400' cy='300' r='4' fill='%23fff'/%3E%3Crect x='50' y='180' width='120' height='240'/%3E%3Crect x='630' y='180' width='120' height='240'/%3E%3C/svg%3E") no-repeat center center;
-            background-size: contain;
-            pointer-events: none;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(5,15,10,0.95) 100%);
+            z-index: 1;
         }
 
-        /* Glowing Vector Wave Accent */
-        .energy-wave {
-            position: fixed;
-            bottom: -50px;
-            left: -10%;
-            width: 120%;
-            height: 250px;
-            background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.25) 0%, transparent 70%);
-            filter: blur(40px);
-            pointer-events: none;
-        }
-
-        /* Glassmorphic Panel */
+        /* Premium Glassmorphism */
         .glass-panel {
-            background: rgba(10, 15, 12, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            box-shadow: 0 0 35px rgba(0, 0, 0, 0.9), 0 0 15px rgba(34, 197, 94, 0.1);
+            background: rgba(20, 25, 22, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .fade-out { animation: fadeOut 0.5s ease forwards; }
+        /* Smooth Transitions */
+        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .hidden { display: none !important; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px) scale(0.99); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-12px); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .input-dark {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        /* Ultra-clean Input Fields */
+        .input-pro {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #ffffff;
             transition: all 0.3s ease;
         }
-        .input-dark:focus {
+        .input-pro:focus {
             border-color: #22c55e;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
             outline: none;
         }
+        
+        /* Custom Scrollbar for Options */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(34,197,94,0.5); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between relative">
+<body class="min-h-screen flex flex-col antialiased selection:bg-turfGreen selection:text-black relative">
 
-    <div class="tactical-bg"></div>
-    <div class="pitch-lines"></div>
-    <div class="energy-wave"></div>
+    <!-- Dynamic Background Layer -->
+    <div id="dynamic-bg"></div>
 
-    <!-- Header with Playcred Logo -->
-    <header class="relative z-10 w-full px-6 py-5 flex items-center justify-between border-b border-white/5 bg-black/40 backdrop-blur-md">
-        <div class="flex items-center space-x-3">
-            <div id="logo-container" class="w-10 h-10 rounded-lg bg-black border border-turfGreen flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)] overflow-hidden">
-                <img src="PClogo.png" alt="Playcred Logo" class="w-full h-full object-contain p-1" />
-            </div>
-            <div>
-                <span class="text-xl font-extrabold tracking-wider text-white">PLAY<span class="text-turfGreen">CRED</span></span>
-                <span class="block text-[10px] text-gray-400 tracking-widest uppercase">Turf Intelligence</span>
+    <!-- Header: Clean, Unboxed Logo & Techno Typography -->
+    <header class="relative z-10 w-full px-6 py-6 flex items-center justify-between border-b border-white/5">
+        <div class="flex items-center space-x-4">
+            <!-- Unboxed Logo -->
+            <img src="PClogo.png" alt="Playcred" class="h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]" />
+            <!-- Futuristic Typography -->
+            <div class="flex flex-col justify-center">
+                <span class="font-techno text-2xl font-black tracking-widest text-white leading-none">PLAY<span class="text-turfGreen">CRED</span></span>
+                <span class="font-sans text-[9px] text-gray-400 tracking-[0.3em] uppercase mt-1">Turf Intelligence</span>
             </div>
         </div>
-        <div class="text-xs font-mono text-turfGreen border border-turfGreen/30 bg-turfGreen/10 px-3 py-1 rounded-full flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-turfGreen animate-pulse"></span> SYSTEM ACTIVE
+        <div class="hidden md:flex font-techno text-xs text-turfGreen tracking-widest items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-turfGreen animate-pulse"></span> SYSTEM ACTIVE
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="relative z-10 flex-grow flex items-center justify-center p-4 md:p-8">
-        <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+    <!-- Main Content: Centered Glass Interface -->
+    <main class="relative z-10 flex-grow flex items-center justify-center p-4 sm:p-8">
+        <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden relative">
             
-            <!-- Left Column: Tactical Steps Tracker (Visible on Desktop) -->
-            <div class="hidden lg:flex lg:col-span-4 flex-col justify-between h-[480px] p-6 glass-panel rounded-2xl">
-                <div>
-                    <h3 class="text-xs font-mono text-gray-400 uppercase tracking-widest mb-6">// ONBOARDING PIPELINE</h3>
-                    <ul class="space-y-6">
-                        <li id="step-nav-1" class="flex items-center space-x-3 text-turfGreen font-semibold transition-all">
-                            <span class="w-7 h-7 rounded-full border border-turfGreen flex items-center justify-center text-xs bg-turfGreen/20 shadow-[0_0_8px_rgba(34,197,94,0.5)]">1</span>
-                            <span>Welcome</span>
-                        </li>
-                        <li id="step-nav-2" class="flex items-center space-x-3 text-gray-500 font-semibold transition-all">
-                            <span class="w-7 h-7 rounded-full border border-gray-700 flex items-center justify-center text-xs">2</span>
-                            <span>Player Details</span>
-                        </li>
-                        <li id="step-nav-3" class="flex items-center space-x-3 text-gray-500 font-semibold transition-all">
-                            <span class="w-7 h-7 rounded-full border border-gray-700 flex items-center justify-center text-xs">3</span>
-                            <span>Sport Assessment</span>
-                        </li>
-                        <li id="step-nav-4" class="flex items-center space-x-3 text-gray-500 font-semibold transition-all">
-                            <span class="w-7 h-7 rounded-full border border-gray-700 flex items-center justify-center text-xs">4</span>
-                            <span>Community Sync</span>
-                        </li>
-                    </ul>
-                </div>
+            <!-- Progress Line (Subtle) -->
+            <div class="absolute top-0 left-0 h-1 bg-turfGreen transition-all duration-500 ease-out z-20" id="progress-bar" style="width: 0%;"></div>
 
-                <div class="text-[11px] font-mono text-gray-500 border-t border-white/10 pt-4">
-                    Target Mail: <span class="text-gray-300">hkhatoro01@gmail.com</span>
-                </div>
-            </div>
-
-            <!-- Right Column: Dynamic Interactive Area -->
-            <div class="lg:col-span-8 w-full">
+            <div class="p-8 sm:p-12">
                 
-                <!-- 1. Screen: Welcome Animation -->
-                <div id="screen-welcome" class="glass-panel p-8 md:p-12 rounded-2xl relative overflow-hidden text-center fade-in">
-                    <div class="relative z-10">
-                        <div class="inline-block p-4 rounded-full bg-black/60 border border-turfGreen/30 mb-6 shadow-[0_0_25px_rgba(34,197,94,0.25)]">
-                            <svg class="w-12 h-12 text-turfGreen animate-bounce" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
-                            </svg>
-                        </div>
-                        <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white uppercase">
-                            Welcome Onboard, <br><span class="text-turfGreen italic font-serif lowercase text-4xl md:text-6xl">family.</span>
-                        </h1>
-                        <p class="text-gray-400 mt-4 max-w-md mx-auto text-sm md:text-base">
-                            Enter your details, complete your skill check, and secure instant access to upcoming games and updates.
-                        </p>
-                        <button onclick="goToScreen('details')" class="mt-8 px-8 py-3.5 bg-turfGreen hover:bg-turfGreenGlow text-black font-extrabold rounded-xl transition duration-300 shadow-[0_0_20px_rgba(34,197,94,0.4)] uppercase tracking-wider text-sm">
-                            Get Started &rarr;
-                        </button>
-                    </div>
+                <!-- SCREEN 1: Welcome -->
+                <div id="screen-welcome" class="text-center fade-in">
+                    <h1 class="font-techno text-4xl sm:text-5xl font-bold tracking-wider text-white uppercase mb-4 shadow-black drop-shadow-lg">
+                        Welcome to the <br><span class="text-turfGreen">Arena</span>
+                    </h1>
+                    <p class="font-sans text-gray-400 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed">
+                        Secure your player profile, calibrate your skill level, and gain exclusive access to the community.
+                    </p>
+                    <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(34,197,94,0.4)]">
+                        Initialize Profile
+                    </button>
                 </div>
 
-                <!-- 2. Screen: Player Details & Sport Pick -->
-                <div id="screen-details" class="glass-panel p-6 md:p-8 rounded-2xl hidden">
-                    <div class="border-b border-white/10 pb-4 mb-6">
-                        <h2 class="text-2xl font-bold text-white">Player Identification</h2>
-                        <p class="text-xs text-gray-400 font-mono mt-1">// ENTER BASIC RECON DATA</p>
+                <!-- SCREEN 2: Details & Sport Selection -->
+                <div id="screen-details" class="hidden">
+                    <div class="mb-8">
+                        <h2 class="font-techno text-2xl font-bold text-white tracking-wide uppercase">Player Identity</h2>
+                        <p class="font-sans text-xs text-turfGreen mt-1 tracking-widest uppercase">// Recon Data Required</p>
                     </div>
 
-                    <form id="details-form" class="space-y-4">
+                    <form id="details-form" class="space-y-6">
                         <div>
-                            <label class="block text-xs font-mono uppercase text-gray-400 mb-1">Full Name</label>
-                            <input type="text" id="input-name" required class="input-dark w-full px-4 py-3 rounded-xl text-sm" placeholder="e.g. Alex Morgan">
+                            <input type="text" id="input-name" required class="input-pro w-full px-5 py-4 rounded-xl text-sm font-sans" placeholder="Full Name">
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-mono uppercase text-gray-400 mb-1">Age</label>
-                                <input type="number" id="input-age" required class="input-dark w-full px-4 py-3 rounded-xl text-sm" placeholder="24">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-mono uppercase text-gray-400 mb-1">WhatsApp / Contact</label>
-                                <input type="tel" id="input-contact" required class="input-dark w-full px-4 py-3 rounded-xl text-sm" placeholder="+91 98765 43210">
-                            </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <input type="number" id="input-age" required class="input-pro w-full px-5 py-4 rounded-xl text-sm font-sans" placeholder="Age">
+                            <input type="tel" id="input-contact" required class="input-pro w-full px-5 py-4 rounded-xl text-sm font-sans" placeholder="WhatsApp Number">
                         </div>
 
-                        <div class="pt-2">
-                            <label class="block text-xs font-mono uppercase text-gray-400 mb-2">Select Primary Discipline</label>
+                        <div class="pt-4 border-t border-white/5">
+                            <label class="block font-techno text-xs text-gray-400 mb-4 tracking-widest uppercase">Select Primary Discipline</label>
                             <div class="grid grid-cols-2 gap-3">
-                                <button type="button" onclick="selectSport('football')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="football">
-                                    <span class="font-bold text-sm">⚽ Football</span>
+                                <button type="button" onclick="selectSport('football')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="football">
+                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">⚽ Football</span>
                                 </button>
-                                <button type="button" onclick="selectSport('cricket')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="cricket">
-                                    <span class="font-bold text-sm">🏏 Cricket</span>
+                                <button type="button" onclick="selectSport('cricket')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="cricket">
+                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">🏏 Cricket</span>
                                 </button>
-                                <button type="button" onclick="selectSport('badminton')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="badminton">
-                                    <span class="font-bold text-sm">🏸 Badminton</span>
+                                <button type="button" onclick="selectSport('badminton')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="badminton">
+                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">🏸 Badminton</span>
                                 </button>
-                                <button type="button" onclick="selectSport('pickleball')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="pickleball">
-                                    <span class="font-bold text-sm">🎾 Pickleball</span>
+                                <button type="button" onclick="selectSport('pickleball')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="pickleball">
+                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">🎾 Pickleball</span>
                                 </button>
                             </div>
                         </div>
 
-                        <button type="submit" id="details-submit-btn" class="hidden w-full mt-6 py-3.5 bg-turfGreen hover:bg-turfGreenGlow text-black font-extrabold rounded-xl transition duration-300 uppercase tracking-wider text-sm shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                            Begin 6-Question Skill Assessment &rarr;
+                        <button type="submit" id="details-submit-btn" class="hidden w-full mt-4 bg-turfGreen hover:bg-[#1eb053] text-black py-4 rounded-xl font-techno font-bold tracking-widest uppercase text-sm transition-all shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                            Proceed to Assessment
                         </button>
                     </form>
                 </div>
 
-                <!-- 3. Screen: Dynamic Quiz with Auto-Fetched Image Banner -->
-                <div id="screen-quiz" class="glass-panel rounded-2xl overflow-hidden hidden">
-                    <!-- Dynamic Sport Banner Image fetched automatically -->
-                    <div class="relative h-44 md:h-52 w-full overflow-hidden border-b border-turfGreen/30">
-                        <img id="quiz-sport-img" src="" alt="Sport Field" class="w-full h-full object-cover filter brightness-75 contrast-125 transition-all duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f0c] via-transparent to-transparent"></div>
-                        <div class="absolute bottom-4 left-6 flex items-center space-x-3">
-                            <span id="quiz-badge" class="px-3 py-1 bg-turfGreen text-black font-extrabold text-xs rounded uppercase tracking-wider shadow">SPORT</span>
-                            <span id="quiz-counter" class="text-xs font-mono text-gray-300 bg-black/70 px-2.5 py-1 rounded border border-white/10">Question 1/6</span>
+                <!-- SCREEN 3: The Assessment Quiz -->
+                <div id="screen-quiz" class="hidden">
+                    <div class="flex justify-between items-end border-b border-white/10 pb-4 mb-8">
+                        <div>
+                            <span id="quiz-badge" class="font-techno text-turfGreen text-xs tracking-[0.2em] uppercase block mb-1">SPORT</span>
+                            <h2 class="font-techno text-2xl font-bold text-white tracking-wide uppercase">Assessment</h2>
                         </div>
+                        <span id="quiz-counter" class="font-techno text-gray-500 text-xs tracking-widest">01 / 06</span>
                     </div>
 
-                    <!-- Question & Answers Body -->
-                    <div class="p-6 md:p-8">
-                        <h3 id="quiz-question-text" class="text-lg md:text-xl font-bold text-white mb-6 leading-relaxed">
-                            Loading assessment...
+                    <div class="min-h-[250px] flex flex-col justify-center">
+                        <h3 id="quiz-question-text" class="font-sans text-xl sm:text-2xl font-light text-white mb-8 leading-relaxed">
+                            Loading...
                         </h3>
                         <div id="quiz-options-container" class="space-y-3">
-                            <!-- Injected by JavaScript -->
+                            <!-- Options injected by JS -->
                         </div>
                     </div>
                 </div>
 
-                <!-- 4. Screen: Processing & Success -->
-                <div id="screen-finish" class="glass-panel p-8 md:p-12 rounded-2xl text-center hidden">
-                    <div id="finish-spinner" class="w-12 h-12 border-4 border-turfGreen border-t-transparent rounded-full animate-spin mx-auto mb-6 shadow-[0_0_15px_rgba(34,197,94,0.4)]"></div>
-                    <h3 id="finish-title" class="text-2xl font-bold text-white mb-2">Syncing Assessment...</h3>
-                    <p id="finish-desc" class="text-sm text-gray-400 font-mono mb-6">Forwarding answers to hkhatoro01@gmail.com</p>
-                    <div id="finish-action" class="hidden">
-                        <a id="whatsapp-redirect-btn" href="#" class="inline-block px-8 py-4 bg-turfGreen text-black font-extrabold rounded-xl transition duration-300 uppercase tracking-wider text-sm shadow-[0_0_20px_rgba(34,197,94,0.5)]">
-                            Join Playcred WhatsApp Community &rarr;
+                <!-- SCREEN 4: Processing / Success -->
+                <div id="screen-finish" class="hidden text-center py-8">
+                    <div id="finish-spinner" class="w-16 h-16 border-2 border-white/10 border-t-turfGreen rounded-full animate-spin mx-auto mb-8 shadow-[0_0_30px_rgba(34,197,94,0.2)]"></div>
+                    
+                    <h3 id="finish-title" class="font-techno text-3xl font-bold text-white tracking-wide uppercase mb-3">Syncing Profile</h3>
+                    <p id="finish-desc" class="font-sans text-gray-400 font-light mb-10">Transmitting data to secure servers...</p>
+                    
+                    <div id="finish-action" class="hidden fade-in">
+                        <a id="whatsapp-redirect-btn" href="#" class="inline-block bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-techno font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.4)]">
+                            Enter the Community
                         </a>
                     </div>
                 </div>
@@ -263,62 +212,61 @@
     </main>
 
     <!-- Footer -->
-    <footer class="relative z-10 w-full py-4 text-center border-t border-white/5 bg-black/50 text-[11px] font-mono text-gray-500">
-        &copy; 2026 PLAYCRED ARENA SYSTEMS. ALL RIGHTS RESERVED.
+    <footer class="relative z-10 w-full py-6 text-center font-techno text-[10px] text-gray-600 tracking-[0.2em] uppercase">
+        &copy; 2026 PLAYCRED ARENA SYSTEMS
     </footer>
 
     <script>
-        /* --- CONFIGURATION --- */
+        /* --- SECURE CONFIGURATION --- */
         const TARGET_MAIL = "hkhatoro01@gmail.com";
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/mvkpjqqz";
         const WHATSAPP_LINK = "https://chat.whatsapp.com/EQEDIQjBwPdE3LMajKmZzJ";
 
-        /* --- HIGH QUALITY DYNAMIC SPORTS IMAGES --- */
-        const sportImages = {
-            football: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1000&q=80",
-            cricket: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1000&q=80",
-            badminton: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1000&q=80",
-            pickleball: "https://images.unsplash.com/photo-1599586120429-48281b6f0ece?auto=format&fit=crop&w=1000&q=80"
+        /* --- HD DYNAMIC BACKGROUNDS (Unsplash) --- */
+        const sportBackgrounds = {
+            football: "https://images.unsplash.com/photo-1518605368461-1ee7c68ca1a7?auto=format&fit=crop&w=2500&q=80", // Stadium lights
+            cricket: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=2500&q=80",  // Cricket ground
+            badminton: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=2500&q=80", // Badminton court
+            pickleball: "https://images.unsplash.com/photo-1622226830501-8fc4d19d6756?auto=format&fit=crop&w=2500&q=80" // Hardcourt
         };
 
-        /* --- 6 QUESTIONS PER SPORT --- */
+        /* --- ASSESSMENT DATA --- */
         const sportQuizzes = {
             football: [
-                { q: "What is your primary playing position on the turf?", options: ["Striker / Forward", "Midfield Playmaker", "Center Back / Fullback", "Goalkeeper"] },
-                { q: "What level of competitive intensity do you prefer?", options: ["Casual weekend friendly", "Competitive local tournament", "Drills & skill training", "Box turf quick match"] },
-                { q: "How often do you hit the turf per week?", options: ["1 time a week", "2-3 times a week", "4+ times a week", "Occasionally"] },
-                { q: "What footwear do you play with?", options: ["Turf Studs (TF)", "Firm Ground (FG)", "Indoor Flats (IN)", "Regular Sports Shoes"] },
-                { q: "Do you have a regular squad or are you looking for matching?", options: ["Have full squad", "Have 2-3 friends", "Solo player looking for a team"] },
-                { q: "What slot do you prefer playing at?", options: ["Early Morning (6 AM - 9 AM)", "Evening (5 PM - 8 PM)", "Night Lights (8 PM - 12 AM)"] }
+                { q: "What is your primary position on the turf?", options: ["Striker / Forward", "Midfield Playmaker", "Center Back / Fullback", "Goalkeeper"] },
+                { q: "What level of competitive intensity do you seek?", options: ["Casual weekend friendly", "Competitive local tournament", "Drills & skill training", "Box turf quick match"] },
+                { q: "How frequently do you hit the turf per week?", options: ["1 time a week", "2-3 times a week", "4+ times a week", "Occasionally"] },
+                { q: "Identify your preferred footwear.", options: ["Turf Studs (TF)", "Firm Ground (FG)", "Indoor Flats (IN)", "Regular Sports Shoes"] },
+                { q: "What is your current squad status?", options: ["I have a full squad", "Playing with 2-3 friends", "Solo player looking for a team"] },
+                { q: "Select your optimal playing window.", options: ["Early Morning (6 AM - 9 AM)", "Evening (5 PM - 8 PM)", "Night Lights (8 PM - 12 AM)"] }
             ],
             cricket: [
-                { q: "What is your key playing style?", options: ["Top-order Batsman", "Pace / Seam Bowler", "Spin Bowler", "All-Rounder / Wicketkeeper"] },
-                { q: "What type of cricket do you play on turf?", options: ["Box Turf Cricket (Hard Tennis)", "Box Turf Cricket (Soft Tennis)", "Leather Ball Nets", "Over-Arm Box Championship"] },
-                { q: "How often do you play per month?", options: ["Every weekend", "Multiple times a week", "1-2 times a month", "Rarely"] },
-                { q: "What is your preference for turf boundaries?", options: ["Enclosed box turf with roof net", "Open boundary cricket turf", "Bowling machine practice nets"] },
-                { q: "Do you play in local box cricket tournaments?", options: ["Yes, regularly", "Occasionally", "No, just casual with friends"] },
-                { q: "What slot time works best for your games?", options: ["Morning slots", "Evening floodlight slots", "Midnight slots"] }
+                { q: "Define your primary role.", options: ["Top-order Batsman", "Pace / Seam Bowler", "Spin Bowler", "All-Rounder / Wicketkeeper"] },
+                { q: "What format of turf cricket do you play?", options: ["Box Turf (Hard Tennis)", "Box Turf (Soft Tennis)", "Leather Ball Nets", "Over-Arm Box Championship"] },
+                { q: "How often do you step onto the pitch monthly?", options: ["Every weekend", "Multiple times a week", "1-2 times a month", "Rarely"] },
+                { q: "Select your turf environment preference.", options: ["Enclosed box turf with roof net", "Open boundary cricket turf", "Bowling machine practice nets"] },
+                { q: "Do you actively participate in local tournaments?", options: ["Yes, regularly", "Occasionally", "No, just casual with friends"] },
+                { q: "Identify your ideal time slot.", options: ["Morning slots", "Evening floodlight slots", "Midnight slots"] }
             ],
             badminton: [
-                { q: "What format do you usually play?", options: ["Singles only", "Doubles only", "Mixed Doubles", "Both Singles & Doubles"] },
-                { q: "How would you rate your skill level?", options: ["Beginner / Casual", "Intermediate (Good rallies)", "Advanced / Club Level", "State / Tournament Player"] },
-                { q: "What is your preferred shuttlecock type?", options: ["Feather Shuttle", "Nylon / Plastic Shuttle (Yonex Mavis 350)", "No preference"] },
-                { q: "Do you own non-marking court shoes?", options: ["Yes, I have them", "No, I need to rent from turf", "Looking to buy"] },
-                { q: "How many sessions do you play per week?", options: ["1-2 sessions", "3-5 sessions", "Daily morning player", "Occasional"] },
-                { q: "What is your preferred booking time?", options: ["Early morning (6 AM - 9 AM)", "Afternoon", "Evening (6 PM - 10 PM)"] }
+                { q: "Which format dominates your gameplay?", options: ["Singles only", "Doubles only", "Mixed Doubles", "Both Singles & Doubles"] },
+                { q: "How do you classify your skill tier?", options: ["Beginner / Casual", "Intermediate (Good rallies)", "Advanced / Club Level", "State / Tournament Player"] },
+                { q: "What is your shuttlecock of choice?", options: ["Feather Shuttle", "Nylon / Plastic Shuttle (e.g. Mavis 350)", "No preference"] },
+                { q: "Do you possess non-marking court shoes?", options: ["Yes, fully equipped", "No, require turf rental", "Looking to purchase"] },
+                { q: "What is your weekly session frequency?", options: ["1-2 sessions", "3-5 sessions", "Daily morning player", "Occasional"] },
+                { q: "Select your optimal booking window.", options: ["Early morning (6 AM - 9 AM)", "Afternoon", "Evening (6 PM - 10 PM)"] }
             ],
             pickleball: [
-                { q: "Have you played Pickleball before?", options: ["Yes, playing regularly", "Played a few times", "Complete beginner transferring from Tennis/Badminton", "First time playing"] },
-                { q: "What format do you prefer?", options: ["Doubles (2v2)", "Singles (1v1)", "Open rotational play with community"] },
-                { q: "Do you have your own paddle?", options: ["Yes, have my own USAPA approved paddle", "No, will rent at the turf", "Looking for recommendations"] },
-                { q: "What is your preferred court layout?", options: ["Dedicated Pickleball indoor court", "Outdoor turf/hardcourt", "Multi-sport convertible court"] },
-                { q: "How frequently do you plan to book courts?", options: ["Weekly fixed slot", "Twice a week", "Weekends only", "Random casual drop-in"] },
-                { q: "Are you interested in joining Playcred ladder tournaments?", options: ["Yes, absolutely", "Maybe once I improve", "No, just recreational"] }
+                { q: "What is your experience level with Pickleball?", options: ["Active regular player", "Played a few times", "Transitioning from Tennis/Badminton", "Complete beginner"] },
+                { q: "Identify your preferred format.", options: ["Doubles (2v2)", "Singles (1v1)", "Open rotational community play"] },
+                { q: "Do you own a USAPA approved paddle?", options: ["Yes", "No, require rental", "Seeking recommendations"] },
+                { q: "Select your preferred court architecture.", options: ["Dedicated indoor court", "Outdoor turf/hardcourt", "Multi-sport convertible court"] },
+                { q: "How consistently do you plan to book?", options: ["Weekly fixed slot", "Twice a week", "Weekends only", "Random casual drop-in"] },
+                { q: "Are you targeting competitive ladder tournaments?", options: ["Yes, absolutely", "Potentially, after improvement", "No, recreational only"] }
             ]
         };
 
-        /* --- STATE MANAGEMENT --- */
-        let currentStep = 1;
+        /* --- SYSTEM STATE --- */
         let selectedSport = "";
         let currentQuestionIdx = 0;
         let candidateData = {
@@ -330,67 +278,51 @@
             responses: {}
         };
 
-        /* --- AUTO REDIRECT WELCOME TIMER (4 seconds) --- */
-        let welcomeTimer = setTimeout(() => {
-            goToScreen('details');
-        }, 4000);
+        const progressBar = document.getElementById('progress-bar');
+        const bgLayer = document.getElementById('dynamic-bg');
 
-        function updateStepTracker(stepNumber) {
-            for (let i = 1; i <= 4; i++) {
-                const navItem = document.getElementById(`step-nav-${i}`);
-                if (!navItem) continue;
-                const dot = navItem.querySelector('span:first-child');
-                
-                if (i === stepNumber) {
-                    navItem.className = "flex items-center space-x-3 text-turfGreen font-semibold transition-all";
-                    dot.className = "w-7 h-7 rounded-full border border-turfGreen flex items-center justify-center text-xs bg-turfGreen/20 shadow-[0_0_8px_rgba(34,197,94,0.5)]";
-                } else if (i < stepNumber) {
-                    navItem.className = "flex items-center space-x-3 text-gray-300 font-medium transition-all";
-                    dot.className = "w-7 h-7 rounded-full border border-turfGreen/50 bg-turfGreen/10 flex items-center justify-center text-xs text-turfGreen";
-                } else {
-                    navItem.className = "flex items-center space-x-3 text-gray-600 font-semibold transition-all";
-                    dot.className = "w-7 h-7 rounded-full border border-gray-800 flex items-center justify-center text-xs";
-                }
-            }
+        function updateProgress(percentage) {
+            progressBar.style.width = `${percentage}%`;
         }
 
         function goToScreen(screenName) {
-            clearTimeout(welcomeTimer);
-            document.querySelectorAll('main > div > div:last-child > div').forEach(el => el.classList.add('hidden'));
+            // Hide all screens cleanly
+            ['welcome', 'details', 'quiz', 'finish'].forEach(s => {
+                document.getElementById(`screen-${s}`).classList.add('hidden');
+                document.getElementById(`screen-${s}`).classList.remove('fade-in');
+            });
 
-            if (screenName === 'details') {
-                updateStepTracker(2);
-                const s = document.getElementById('screen-details');
-                s.classList.remove('hidden');
-                s.classList.add('fade-in');
-            } else if (screenName === 'quiz') {
-                updateStepTracker(3);
-                const s = document.getElementById('screen-quiz');
-                s.classList.remove('hidden');
-                s.classList.add('fade-in');
-            } else if (screenName === 'finish') {
-                updateStepTracker(4);
-                const s = document.getElementById('screen-finish');
-                s.classList.remove('hidden');
-                s.classList.add('fade-in');
-            }
+            // Show target screen
+            const target = document.getElementById(`screen-${screenName}`);
+            target.classList.remove('hidden');
+            target.classList.add('fade-in');
+
+            if (screenName === 'details') updateProgress(25);
+            if (screenName === 'finish') updateProgress(100);
         }
 
         function selectSport(sportKey) {
             selectedSport = sportKey;
+            
+            // Visual feedback on buttons
             document.querySelectorAll('.sport-select-btn').forEach(btn => {
-                btn.classList.remove('border-turfGreen', 'bg-turfGreen/10', 'text-turfGreen');
+                btn.classList.remove('border-turfGreen', 'bg-white/10');
+                btn.classList.add('border-white/10');
             });
             const activeBtn = document.querySelector(`.sport-select-btn[data-sport="${sportKey}"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('border-turfGreen', 'bg-turfGreen/10', 'text-turfGreen');
-            }
+            activeBtn.classList.remove('border-white/10');
+            activeBtn.classList.add('border-turfGreen', 'bg-white/10');
+            
+            // Change Background dynamically
+            bgLayer.style.backgroundImage = `url('${sportBackgrounds[sportKey]}')`;
+
+            // Reveal submit button
             const submitBtn = document.getElementById('details-submit-btn');
             submitBtn.classList.remove('hidden');
             submitBtn.classList.add('fade-in');
         }
 
-        /* --- FORM SUBMISSION & QUIZ LAUNCH --- */
+        /* --- PIPELINE LOGIC --- */
         document.getElementById('details-form').addEventListener('submit', (e) => {
             e.preventDefault();
             if (!selectedSport) return;
@@ -400,10 +332,8 @@
             candidateData.contact = document.getElementById('input-contact').value;
             candidateData.sport = selectedSport;
 
-            // Set dynamic sport image
-            document.getElementById('quiz-sport-img').src = sportImages[selectedSport];
             document.getElementById('quiz-badge').textContent = selectedSport;
-
+            
             currentQuestionIdx = 0;
             goToScreen('quiz');
             renderQuestion();
@@ -413,7 +343,11 @@
             const quiz = sportQuizzes[selectedSport];
             const qData = quiz[currentQuestionIdx];
 
-            document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIdx + 1} of 6`;
+            // Progress is 25% (details done) + portion of remaining 75%
+            const quizProgress = 25 + ((currentQuestionIdx / 6) * 75);
+            updateProgress(quizProgress);
+
+            document.getElementById('quiz-counter').textContent = `0${currentQuestionIdx + 1} / 06`;
             document.getElementById('quiz-question-text').textContent = qData.q;
 
             const container = document.getElementById('quiz-options-container');
@@ -421,8 +355,8 @@
 
             qData.options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-4 rounded-xl bg-black/50 border border-white/10 hover:border-turfGreen hover:bg-turfGreen/10 hover:text-turfGreen transition duration-200 text-sm md:text-base font-medium flex items-center justify-between";
-                btn.innerHTML = `<span>${opt}</span><span class="text-xs text-gray-500 font-mono">SELECT &rarr;</span>`;
+                btn.className = "w-full text-left p-4 rounded-xl input-pro hover:border-turfGreen transition duration-200 flex items-center justify-between group";
+                btn.innerHTML = `<span class="font-sans text-sm sm:text-base font-medium text-gray-200 group-hover:text-white">${opt}</span><span class="font-techno text-xs text-turfGreen tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">SELECT &rarr;</span>`;
                 btn.onclick = () => handleAnswer(qData.q, opt);
                 container.appendChild(btn);
             });
@@ -433,7 +367,17 @@
 
             if (currentQuestionIdx < 5) {
                 currentQuestionIdx++;
-                renderQuestion();
+                
+                // Quick fade effect for next question
+                const qText = document.getElementById('quiz-question-text');
+                const qOpts = document.getElementById('quiz-options-container');
+                qText.style.opacity = 0; qOpts.style.opacity = 0;
+                
+                setTimeout(() => {
+                    renderQuestion();
+                    qText.style.opacity = 1; qOpts.style.opacity = 1;
+                    qText.style.transition = 'opacity 0.3s'; qOpts.style.transition = 'opacity 0.3s';
+                }, 300);
             } else {
                 submitAllData();
             }
@@ -443,38 +387,34 @@
             goToScreen('finish');
             
             try {
-                // Post payload to email endpoint (Formspree forwards directly to target)
                 await fetch(FORMSPREE_ENDPOINT, {
                     method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         Recipient: TARGET_MAIL,
-                        Subject: `Playcred Lead: ${candidateData.name} (${candidateData.sport.toUpperCase()})`,
+                        Subject: `Playcred Recon: ${candidateData.name} (${candidateData.sport.toUpperCase()})`,
                         ...candidateData
                     })
                 });
             } catch (err) {
-                console.log("Transmission handled or running locally:", err);
+                console.log("Local/Dev bypass:", err);
             }
 
-            // Reveal completion state
+            // Success State
             document.getElementById('finish-spinner').classList.add('hidden');
-            document.getElementById('finish-title').textContent = "Assessment Complete!";
-            document.getElementById('finish-desc').textContent = `Your responses have been synced with Playcred systems and forwarded to ${TARGET_MAIL}.`;
+            document.getElementById('finish-title').textContent = "Profile Initialized";
+            document.getElementById('finish-title').classList.add('text-turfGreen');
+            document.getElementById('finish-desc').textContent = "Data secured. Access granted.";
             
             const actionDiv = document.getElementById('finish-action');
             const redirectBtn = document.getElementById('whatsapp-redirect-btn');
             redirectBtn.href = WHATSAPP_LINK;
             actionDiv.classList.remove('hidden');
-            actionDiv.classList.add('fade-in');
-
-            // Auto-redirect to WhatsApp after 2 seconds
+            
+            // Auto-redirect to WhatsApp after 2.5 seconds
             setTimeout(() => {
                 window.location.href = WHATSAPP_LINK;
-            }, 2000);
+            }, 2500);
         }
     </script>
 </body>
