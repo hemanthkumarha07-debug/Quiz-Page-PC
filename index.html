@@ -33,12 +33,12 @@
             overflow-x: hidden;
         }
 
-        /* Dynamic Full-Screen Image Background with Dark Overlay */
+        /* Dynamic Full-Screen Image Background with LIGHTER Overlay */
         #dynamic-bg {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c68ca1a7?auto=format&fit=crop&w=2000&q=80'); /* Default Stadium */
+            background-image: url('https://images.unsplash.com/photo-1518605368461-1ee7c68ca1a7?auto=format&fit=crop&w=2000&q=80'); 
             background-size: cover;
             background-position: center;
             transition: background-image 1s ease-in-out;
@@ -47,16 +47,26 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(5,15,10,0.95) 100%);
+            /* Lightened from 0.85 to 0.55 opacity so images pop through */
+            background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(5,15,10,0.70) 100%);
             z-index: 1;
+        }
+
+        /* Ambient Glowing Brush Strokes */
+        .ambient-sweep {
+            position: absolute;
+            filter: blur(90px);
+            z-index: 2;
+            pointer-events: none;
+            border-radius: 50%;
         }
 
         /* Premium Glassmorphism */
         .glass-panel {
-            background: rgba(20, 25, 22, 0.4);
+            background: rgba(20, 25, 22, 0.5);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
@@ -71,22 +81,22 @@
 
         /* Ultra-clean Input Fields */
         .input-pro {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #ffffff;
             transition: all 0.3s ease;
         }
         .input-pro:focus {
             border-color: #22c55e;
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
             outline: none;
         }
         
         /* Custom Scrollbar for Options */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(34,197,94,0.5); }
     </style>
 </head>
@@ -95,51 +105,57 @@
     <!-- Dynamic Background Layer -->
     <div id="dynamic-bg"></div>
 
+    <!-- NEW: Ambient Glowing Brush Strokes (Visible on Screens 1 & 2) -->
+    <div id="ambient-sweeps" class="fixed inset-0 z-0 pointer-events-none transition-opacity duration-700">
+        <div class="ambient-sweep bg-turfGreen/30 w-[600px] h-[150px] top-[15%] left-[-10%] -rotate-45"></div>
+        <div class="ambient-sweep bg-turfGreen/25 w-[500px] h-[200px] bottom-[5%] right-[-5%] rotate-12"></div>
+    </div>
+
     <!-- Header: Clean, Unboxed Logo & Techno Typography -->
-    <header class="relative z-10 w-full px-6 py-6 flex items-center justify-between border-b border-white/5">
+    <header class="relative z-10 w-full px-6 py-6 flex items-center justify-between border-b border-white/10 bg-black/20">
         <div class="flex items-center space-x-4">
             <!-- Top Left Logo -->
-            <img src="PClogo.png" alt="Playcred" class="h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]" />
+            <img src="PClogo.png" alt="Playcred" class="h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
             <!-- Futuristic Typography -->
             <div class="flex flex-col justify-center">
-                <span class="font-techno text-2xl font-black tracking-widest text-white leading-none">PLAY<span class="text-turfGreen">CRED</span></span>
-                <span class="font-sans text-[9px] text-gray-400 tracking-[0.3em] uppercase mt-1">Turf Intelligence</span>
+                <span class="font-techno text-2xl font-black tracking-widest text-white leading-none drop-shadow-md">PLAY<span class="text-turfGreen">CRED</span></span>
+                <span class="font-sans text-[9px] text-gray-300 tracking-[0.3em] uppercase mt-1">Turf Intelligence</span>
             </div>
         </div>
-        <div class="hidden md:flex font-techno text-xs text-turfGreen tracking-widest items-center gap-2">
+        <div class="hidden md:flex font-techno text-xs text-turfGreen tracking-widest items-center gap-2 drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]">
             <span class="w-1.5 h-1.5 rounded-full bg-turfGreen animate-pulse"></span> SYSTEM ACTIVE
         </div>
     </header>
 
     <!-- Main Content: Centered Glass Interface -->
     <main class="relative z-10 flex-grow flex items-center justify-center p-4 sm:p-8">
-        <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden relative">
+        <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden relative shadow-2xl">
             
-            <!-- NEW: Center Background Logo Watermark -->
-            <img src="PClogo.png" id="center-watermark" alt="Watermark" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 md:w-96 opacity-[0.06] pointer-events-none transition-opacity duration-700 z-0 mix-blend-screen" />
+            <!-- ENLARGED: Center Background Logo Watermark -->
+            <img src="PClogo.png" id="center-watermark" alt="Watermark" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 md:w-[450px] opacity-[0.08] pointer-events-none transition-opacity duration-700 z-0 mix-blend-screen" />
 
-            <!-- NEW: HUD Targeting Reticles (Corners) -->
+            <!-- HUD Targeting Reticles (Corners) -->
             <div id="hud-elements" class="transition-opacity duration-700">
-                <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-turfGreen/30 rounded-tl-3xl z-10 pointer-events-none"></div>
-                <div class="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-turfGreen/30 rounded-tr-3xl z-10 pointer-events-none"></div>
-                <div class="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-turfGreen/30 rounded-bl-3xl z-10 pointer-events-none"></div>
-                <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-turfGreen/30 rounded-br-3xl z-10 pointer-events-none"></div>
+                <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-turfGreen/40 rounded-tl-3xl z-10 pointer-events-none"></div>
+                <div class="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-turfGreen/40 rounded-tr-3xl z-10 pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-turfGreen/40 rounded-bl-3xl z-10 pointer-events-none"></div>
+                <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-turfGreen/40 rounded-br-3xl z-10 pointer-events-none"></div>
             </div>
 
-            <!-- Progress Line (Subtle) -->
-            <div class="absolute top-0 left-0 h-1 bg-turfGreen transition-all duration-500 ease-out z-20" id="progress-bar" style="width: 0%;"></div>
+            <!-- Progress Line -->
+            <div class="absolute top-0 left-0 h-1 bg-turfGreen transition-all duration-500 ease-out z-20 shadow-[0_0_10px_rgba(34,197,94,0.8)]" id="progress-bar" style="width: 0%;"></div>
 
             <div class="p-8 sm:p-12 relative z-20">
                 
                 <!-- SCREEN 1: Welcome -->
                 <div id="screen-welcome" class="text-center fade-in">
-                    <h1 class="font-techno text-4xl sm:text-5xl font-bold tracking-wider text-white uppercase mb-4 shadow-black drop-shadow-lg">
-                        Welcome to the <br><span class="text-turfGreen">Arena</span>
+                    <h1 class="font-techno text-4xl sm:text-5xl font-bold tracking-wider text-white uppercase mb-4 shadow-black drop-shadow-2xl">
+                        Welcome to the <br><span class="text-turfGreen drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">Arena</span>
                     </h1>
-                    <p class="font-sans text-gray-400 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed">
+                    <p class="font-sans text-gray-300 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed drop-shadow-md">
                         Secure your player profile, calibrate your skill level, and gain exclusive access to the community.
                     </p>
-                    <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 hover:shadow-[0_0_25px_rgba(34,197,94,0.4)] relative overflow-hidden group">
+                    <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.5)] relative overflow-hidden group">
                         <span class="relative z-10">Initialize Profile</span>
                         <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                     </button>
@@ -148,8 +164,8 @@
                 <!-- SCREEN 2: Details & Sport Selection -->
                 <div id="screen-details" class="hidden">
                     <div class="mb-8">
-                        <h2 class="font-techno text-2xl font-bold text-white tracking-wide uppercase">Player Identity</h2>
-                        <p class="font-sans text-xs text-turfGreen mt-1 tracking-widest uppercase">// Recon Data Required</p>
+                        <h2 class="font-techno text-2xl font-bold text-white tracking-wide uppercase drop-shadow-lg">Player Identity</h2>
+                        <p class="font-sans text-xs text-turfGreen mt-1 tracking-widest uppercase drop-shadow-sm">// Recon Data Required</p>
                     </div>
 
                     <form id="details-form" class="space-y-6">
@@ -161,25 +177,25 @@
                             <input type="tel" id="input-contact" required class="input-pro w-full px-5 py-4 rounded-xl text-sm font-sans" placeholder="WhatsApp Number">
                         </div>
 
-                        <div class="pt-4 border-t border-white/5">
-                            <label class="block font-techno text-xs text-gray-400 mb-4 tracking-widest uppercase">Select Primary Discipline</label>
+                        <div class="pt-4 border-t border-white/10">
+                            <label class="block font-techno text-xs text-gray-300 mb-4 tracking-widest uppercase">Select Primary Discipline</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <button type="button" onclick="selectSport('football')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="football">
-                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">⚽ Football</span>
+                                    <span class="font-sans font-medium text-sm text-gray-200 group-hover:text-white transition">⚽ Football</span>
                                 </button>
                                 <button type="button" onclick="selectSport('cricket')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="cricket">
-                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">🏏 Cricket</span>
+                                    <span class="font-sans font-medium text-sm text-gray-200 group-hover:text-white transition">🏏 Cricket</span>
                                 </button>
                                 <button type="button" onclick="selectSport('badminton')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="badminton">
-                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">🏸 Badminton</span>
+                                    <span class="font-sans font-medium text-sm text-gray-200 group-hover:text-white transition">🏸 Badminton</span>
                                 </button>
                                 <button type="button" onclick="selectSport('pickleball')" class="sport-select-btn input-pro p-4 rounded-xl text-left transition flex items-center justify-center group" data-sport="pickleball">
-                                    <span class="font-sans font-medium text-sm text-gray-300 group-hover:text-white transition">🎾 Pickleball</span>
+                                    <span class="font-sans font-medium text-sm text-gray-200 group-hover:text-white transition">🎾 Pickleball</span>
                                 </button>
                             </div>
                         </div>
 
-                        <button type="submit" id="details-submit-btn" class="hidden w-full mt-4 bg-turfGreen hover:bg-[#1eb053] text-black py-4 rounded-xl font-techno font-bold tracking-widest uppercase text-sm transition-all shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                        <button type="submit" id="details-submit-btn" class="hidden w-full mt-4 bg-turfGreen hover:bg-[#1eb053] text-black py-4 rounded-xl font-techno font-bold tracking-widest uppercase text-sm transition-all shadow-[0_0_20px_rgba(34,197,94,0.3)]">
                             Proceed to Assessment
                         </button>
                     </form>
@@ -189,14 +205,14 @@
                 <div id="screen-quiz" class="hidden">
                     <div class="flex justify-between items-end border-b border-white/10 pb-4 mb-8">
                         <div>
-                            <span id="quiz-badge" class="font-techno text-turfGreen text-xs tracking-[0.2em] uppercase block mb-1">SPORT</span>
-                            <h2 class="font-techno text-2xl font-bold text-white tracking-wide uppercase">Assessment</h2>
+                            <span id="quiz-badge" class="font-techno text-turfGreen text-xs tracking-[0.2em] uppercase block mb-1 drop-shadow-sm">SPORT</span>
+                            <h2 class="font-techno text-2xl font-bold text-white tracking-wide uppercase drop-shadow-lg">Assessment</h2>
                         </div>
-                        <span id="quiz-counter" class="font-techno text-gray-500 text-xs tracking-widest">01 / 06</span>
+                        <span id="quiz-counter" class="font-techno text-gray-400 text-xs tracking-widest">01 / 06</span>
                     </div>
 
                     <div class="min-h-[250px] flex flex-col justify-center">
-                        <h3 id="quiz-question-text" class="font-sans text-xl sm:text-2xl font-light text-white mb-8 leading-relaxed">
+                        <h3 id="quiz-question-text" class="font-sans text-xl sm:text-2xl font-medium text-white mb-8 leading-relaxed drop-shadow-md">
                             Loading...
                         </h3>
                         <div id="quiz-options-container" class="space-y-3">
@@ -207,13 +223,13 @@
 
                 <!-- SCREEN 4: Processing / Success -->
                 <div id="screen-finish" class="hidden text-center py-8">
-                    <div id="finish-spinner" class="w-16 h-16 border-2 border-white/10 border-t-turfGreen rounded-full animate-spin mx-auto mb-8 shadow-[0_0_30px_rgba(34,197,94,0.2)]"></div>
+                    <div id="finish-spinner" class="w-16 h-16 border-2 border-white/10 border-t-turfGreen rounded-full animate-spin mx-auto mb-8 shadow-[0_0_30px_rgba(34,197,94,0.3)]"></div>
                     
-                    <h3 id="finish-title" class="font-techno text-3xl font-bold text-white tracking-wide uppercase mb-3">Syncing Profile</h3>
-                    <p id="finish-desc" class="font-sans text-gray-400 font-light mb-10">Transmitting data to secure servers...</p>
+                    <h3 id="finish-title" class="font-techno text-3xl font-bold text-white tracking-wide uppercase mb-3 drop-shadow-lg">Syncing Profile</h3>
+                    <p id="finish-desc" class="font-sans text-gray-300 font-light mb-10 drop-shadow-sm">Transmitting data to secure servers...</p>
                     
                     <div id="finish-action" class="hidden fade-in">
-                        <a id="whatsapp-redirect-btn" href="#" class="inline-block bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-techno font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.4)] relative overflow-hidden group">
+                        <a id="whatsapp-redirect-btn" href="#" class="inline-block bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-techno font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.5)] relative overflow-hidden group">
                             <span class="relative z-10">Enter the Community</span>
                             <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                         </a>
@@ -225,7 +241,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="relative z-10 w-full py-6 text-center font-techno text-[10px] text-gray-600 tracking-[0.2em] uppercase">
+    <footer class="relative z-10 w-full py-6 text-center font-techno text-[10px] text-gray-400 tracking-[0.2em] uppercase bg-black/30 border-t border-white/10">
         &copy; 2026 PLAYCRED ARENA SYSTEMS
     </footer>
 
@@ -295,6 +311,7 @@
         const bgLayer = document.getElementById('dynamic-bg');
         const centerWatermark = document.getElementById('center-watermark');
         const hudElements = document.getElementById('hud-elements');
+        const ambientSweeps = document.getElementById('ambient-sweeps');
 
         function updateProgress(percentage) {
             progressBar.style.width = `${percentage}%`;
@@ -312,13 +329,15 @@
             target.classList.remove('hidden');
             target.classList.add('fade-in');
 
-            // Handle HUD & Watermark logic
+            // Handle Design Elements Visibility
             if (screenName === 'quiz' || screenName === 'finish') {
                 centerWatermark.style.opacity = '0';
                 hudElements.style.opacity = '0';
+                ambientSweeps.style.opacity = '0';
             } else {
-                centerWatermark.style.opacity = '0.06';
+                centerWatermark.style.opacity = '0.08';
                 hudElements.style.opacity = '1';
+                ambientSweeps.style.opacity = '1';
             }
 
             if (screenName === 'details') updateProgress(25);
@@ -379,8 +398,8 @@
 
             qData.options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-4 rounded-xl input-pro hover:border-turfGreen transition duration-200 flex items-center justify-between group";
-                btn.innerHTML = `<span class="font-sans text-sm sm:text-base font-medium text-gray-200 group-hover:text-white">${opt}</span><span class="font-techno text-xs text-turfGreen tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">SELECT &rarr;</span>`;
+                btn.className = "w-full text-left p-4 rounded-xl input-pro hover:border-turfGreen transition duration-200 flex items-center justify-between group shadow-sm";
+                btn.innerHTML = `<span class="font-sans text-sm sm:text-base font-medium text-gray-100 group-hover:text-white drop-shadow-sm">${opt}</span><span class="font-techno text-xs text-turfGreen tracking-widest opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-sm">SELECT &rarr;</span>`;
                 btn.onclick = () => handleAnswer(qData.q, opt);
                 container.appendChild(btn);
             });
@@ -427,7 +446,7 @@
             // Success State
             document.getElementById('finish-spinner').classList.add('hidden');
             document.getElementById('finish-title').textContent = "Profile Initialized";
-            document.getElementById('finish-title').classList.add('text-turfGreen');
+            document.getElementById('finish-title').classList.add('text-turfGreen', 'drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]');
             document.getElementById('finish-desc').textContent = "Data secured. Access granted.";
             
             const actionDiv = document.getElementById('finish-action');
