@@ -47,7 +47,6 @@
             content: '';
             position: absolute;
             inset: 0;
-            /* Lightened from 0.85 to 0.55 opacity so images pop through */
             background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(5,15,10,0.70) 100%);
             z-index: 1;
         }
@@ -70,14 +69,28 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
-        /* Smooth Transitions */
-        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .hidden { display: none !important; }
+        /* NEW: Sequential Staggered Animations */
+        .animate-logo-intro {
+            opacity: 0;
+            animation: scaleFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+        .animate-content-intro {
+            opacity: 0;
+            animation: slideUpFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
+        }
 
-        @keyframes fadeIn {
+        @keyframes scaleFadeIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideUpFadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Standard Fade-in for other screens */
+        .fade-in { animation: slideUpFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .hidden { display: none !important; }
 
         /* Ultra-clean Input Fields */
         .input-pro {
@@ -93,7 +106,7 @@
             outline: none;
         }
         
-        /* Custom Scrollbar for Options */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
@@ -105,7 +118,7 @@
     <!-- Dynamic Background Layer -->
     <div id="dynamic-bg"></div>
 
-    <!-- NEW: Ambient Glowing Brush Strokes (Visible on Screens 1 & 2) -->
+    <!-- Ambient Glowing Brush Strokes (Visible on Screens 1 & 2) -->
     <div id="ambient-sweeps" class="fixed inset-0 z-0 pointer-events-none transition-opacity duration-700">
         <div class="ambient-sweep bg-turfGreen/30 w-[600px] h-[150px] top-[15%] left-[-10%] -rotate-45"></div>
         <div class="ambient-sweep bg-turfGreen/25 w-[500px] h-[200px] bottom-[5%] right-[-5%] rotate-12"></div>
@@ -116,7 +129,6 @@
         <div class="flex items-center space-x-4">
             <!-- Top Left Logo -->
             <img src="PClogo.png" alt="Playcred" class="h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
-            <!-- Futuristic Typography -->
             <div class="flex flex-col justify-center">
                 <span class="font-techno text-2xl font-black tracking-widest text-white leading-none drop-shadow-md">PLAY<span class="text-turfGreen">CRED</span></span>
                 <span class="font-sans text-[9px] text-gray-300 tracking-[0.3em] uppercase mt-1">Turf Intelligence</span>
@@ -131,7 +143,7 @@
     <main class="relative z-10 flex-grow flex items-center justify-center p-4 sm:p-8">
         <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden relative shadow-2xl">
             
-            <!-- ENLARGED: Center Background Logo Watermark -->
+            <!-- Center Background Logo Watermark -->
             <img src="PClogo.png" id="center-watermark" alt="Watermark" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 md:w-[450px] opacity-[0.08] pointer-events-none transition-opacity duration-700 z-0 mix-blend-screen" />
 
             <!-- HUD Targeting Reticles (Corners) -->
@@ -147,18 +159,24 @@
 
             <div class="p-8 sm:p-12 relative z-20">
                 
-                <!-- SCREEN 1: Welcome -->
-                <div id="screen-welcome" class="text-center fade-in">
-                    <h1 class="font-techno text-4xl sm:text-5xl font-bold tracking-wider text-white uppercase mb-4 shadow-black drop-shadow-2xl">
-                        Welcome to the <br><span class="text-turfGreen drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">Arena</span>
-                    </h1>
-                    <p class="font-sans text-gray-300 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed drop-shadow-md">
-                        Secure your player profile, calibrate your skill level, and gain exclusive access to the community.
-                    </p>
-                    <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.5)] relative overflow-hidden group">
-                        <span class="relative z-10">Initialize Profile</span>
-                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                    </button>
+                <!-- SCREEN 1: Welcome (With Sequential Animation) -->
+                <div id="screen-welcome" class="text-center">
+                    <!-- 1. Logo fades in first -->
+                    <img src="PClogo.png" alt="Playcred Arena" class="w-24 sm:w-32 mx-auto mb-6 animate-logo-intro drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                    
+                    <!-- 2. Content & Button fades in second -->
+                    <div class="animate-content-intro">
+                        <h1 class="font-techno text-4xl sm:text-5xl font-bold tracking-wider text-white uppercase mb-4 shadow-black drop-shadow-2xl">
+                            Welcome to the <br><span class="text-turfGreen drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">Arena</span>
+                        </h1>
+                        <p class="font-sans text-gray-300 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed drop-shadow-md">
+                            Secure your player profile, calibrate your skill level, and gain exclusive access to the community.
+                        </p>
+                        <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.5)] relative overflow-hidden group">
+                            <span class="relative z-10">Initialize Profile</span>
+                            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- SCREEN 2: Details & Sport Selection -->
@@ -240,9 +258,42 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="relative z-10 w-full py-6 text-center font-techno text-[10px] text-gray-400 tracking-[0.2em] uppercase bg-black/30 border-t border-white/10">
-        &copy; 2026 PLAYCRED ARENA SYSTEMS
+    <!-- NEW: Persistent Global Footer -->
+    <footer class="relative z-10 w-full bg-black/40 backdrop-blur-md border-t border-white/10 py-5 px-6 mt-auto">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Copyright -->
+            <div class="font-techno text-[10px] text-gray-400 tracking-[0.2em] uppercase text-center md:text-left">
+                &copy; 2026 PLAYCRED ARENA SYSTEMS
+            </div>
+            
+            <!-- Social Media Handles -->
+            <div class="flex flex-wrap items-center justify-center gap-6">
+                <!-- Instagram -->
+                <a href="https://instagram.com/playcred.in" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 text-gray-400 hover:text-turfGreen transition duration-300 group">
+                    <svg class="w-4 h-4 fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                    </svg>
+                    <span class="font-sans text-xs tracking-wider">@playcred.in</span>
+                </a>
+                
+                <!-- Facebook -->
+                <a href="#" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 text-gray-400 hover:text-turfGreen transition duration-300 group">
+                    <svg class="w-4 h-4 fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                        <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                    </svg>
+                    <span class="font-sans text-xs tracking-wider">playcred</span>
+                </a>
+                
+                <!-- Twitter / X -->
+                <a href="#" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 text-gray-400 hover:text-turfGreen transition duration-300 group">
+                    <svg class="w-4 h-4 fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                    </svg>
+                    <span class="font-sans text-xs tracking-wider">playcred</span>
+                </a>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -320,14 +371,19 @@
         function goToScreen(screenName) {
             // Hide all screens cleanly
             ['welcome', 'details', 'quiz', 'finish'].forEach(s => {
-                document.getElementById(`screen-${s}`).classList.add('hidden');
-                document.getElementById(`screen-${s}`).classList.remove('fade-in');
+                const element = document.getElementById(`screen-${s}`);
+                element.classList.add('hidden');
+                element.classList.remove('fade-in');
             });
 
             // Show target screen
             const target = document.getElementById(`screen-${screenName}`);
             target.classList.remove('hidden');
-            target.classList.add('fade-in');
+            
+            // Apply standard fade-in to all screens except the welcome screen (which uses its custom intro animation)
+            if (screenName !== 'welcome') {
+                target.classList.add('fade-in');
+            }
 
             // Handle Design Elements Visibility
             if (screenName === 'quiz' || screenName === 'finish') {
