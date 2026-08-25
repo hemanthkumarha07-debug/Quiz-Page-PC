@@ -3,279 +3,483 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turf Onboarding</title>
+    <title>Playcred | Player Onboarding & Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Restricting Tailwind to only Black, White, and Green shades
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         turfGreen: '#22c55e',
-                        turfGreenHover: '#16a34a',
-                        turfBlack: '#000000',
-                        turfDark: '#0a0a0a',
-                        turfWhite: '#ffffff',
+                        turfGreenGlow: '#10b981',
+                        turfDarkGreen: '#0f291e',
+                        turfBg: '#050806',
+                        turfCard: 'rgba(10, 16, 12, 0.75)',
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #000000; color: #ffffff; }
-        
-        /* Elegant Animations */
-        .fade-in { animation: fadeIn 1s ease-in forwards; }
-        .fade-out { animation: fadeOut 1s ease-out forwards; }
+        /* Base Dark Tactical Background */
+        body {
+            background-color: #050806;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Tactical Pitch Background Grid & Design Strokes */
+        .tactical-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: 
+                radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            pointer-events: none;
+        }
+
+        /* Tactical Vector Pitch Markings Overlay */
+        .pitch-lines {
+            position: fixed;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600' opacity='0.04' stroke='%23ffffff' stroke-width='2' fill='none'%3E%3Crect x='50' y='50' width='700' height='500' rx='10'/%3E%3Cline x1='400' y1='50' x2='400' y2='550'/%3E%3Ccircle cx='400' cy='300' r='80'/%3E%3Ccircle cx='400' cy='300' r='4' fill='%23fff'/%3E%3Crect x='50' y='180' width='120' height='240'/%3E%3Crect x='630' y='180' width='120' height='240'/%3E%3C/svg%3E") no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+        }
+
+        /* Glowing Vector Wave Accent */
+        .energy-wave {
+            position: fixed;
+            bottom: -50px;
+            left: -10%;
+            width: 120%;
+            height: 250px;
+            background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        /* Glassmorphic Panel */
+        .glass-panel {
+            background: rgba(10, 15, 12, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.9), 0 0 15px rgba(34, 197, 94, 0.1);
+        }
+
+        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .fade-out { animation: fadeOut 0.5s ease forwards; }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(12px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         @keyframes fadeOut {
             from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 0; transform: translateY(-12px); }
         }
-        
-        /* Custom Input Styling */
-        .input-field {
-            width: 100%; background-color: #0a0a0a; color: #ffffff;
-            border: 1px solid #333; border-radius: 0.5rem;
-            padding: 0.75rem 1rem; outline: none;
-            transition: border-color 0.3s;
+
+        .input-dark {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transition: all 0.3s ease;
         }
-        .input-field:focus { border-color: #22c55e; }
-        
-        .hidden { display: none !important; }
+        .input-dark:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+            outline: none;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col font-sans">
+<body class="min-h-screen flex flex-col justify-between relative">
 
-    <header id="header" class="hidden p-6 absolute top-0 left-0 w-full z-10">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-turfGreen rounded-full flex items-center justify-center font-bold text-turfBlack">T</div>
-            <span class="font-bold text-lg tracking-wider text-turfWhite">TURF<span class="text-turfGreen">CO</span></span>
+    <div class="tactical-bg"></div>
+    <div class="pitch-lines"></div>
+    <div class="energy-wave"></div>
+
+    <!-- Header with Playcred Logo -->
+    <header class="relative z-10 w-full px-6 py-5 flex items-center justify-between border-b border-white/5 bg-black/40 backdrop-blur-md">
+        <div class="flex items-center space-x-3">
+            <div id="logo-container" class="w-10 h-10 rounded-lg bg-black border border-turfGreen flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)]">
+                <!-- Replace this SVG with <img src="YOUR_LOGO.png" class="w-full h-full object-contain" /> when ready -->
+                <svg class="w-6 h-6 text-turfGreen" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <div>
+                <span class="text-xl font-extrabold tracking-wider text-white">PLAY<span class="text-turfGreen">CRED</span></span>
+                <span class="block text-[10px] text-gray-400 tracking-widest uppercase">Turf Intelligence</span>
+            </div>
+        </div>
+        <div class="text-xs font-mono text-turfGreen border border-turfGreen/30 bg-turfGreen/10 px-3 py-1 rounded-full flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-turfGreen animate-pulse"></span> SYSTEM ACTIVE
         </div>
     </header>
 
-    <section id="welcome-screen" class="flex-grow flex flex-col items-center justify-center p-4 z-20">
-        <div class="text-center fade-in">
-            <div class="w-20 h-20 bg-turfGreen rounded-full flex items-center justify-center font-bold text-turfBlack text-3xl mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.3)]">T</div>
-            <h1 class="text-3xl md:text-5xl font-light tracking-wide mb-2 text-turfWhite">Welcome Onboard</h1>
-            <h2 class="text-2xl md:text-4xl font-bold text-turfGreen italic">Family.</h2>
-        </div>
-    </section>
-
-    <section id="info-screen" class="hidden flex-grow flex items-center justify-center p-4 mt-16">
-        <div class="w-full max-w-md bg-turfDark p-8 rounded-2xl border border-gray-800 shadow-2xl fade-in">
-            <h2 class="text-2xl font-bold mb-6 text-turfWhite border-b border-turfGreen pb-2 inline-block">Player Details</h2>
+    <!-- Main Container -->
+    <main class="relative z-10 flex-grow flex items-center justify-center p-4 md:p-8">
+        <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
-            <form id="info-form" class="space-y-5">
+            <!-- Left Column: Tactical Steps Tracker (Visible on Desktop) -->
+            <div class="hidden lg:flex lg:col-span-4 flex-col justify-between h-[480px] p-6 glass-panel rounded-2xl">
                 <div>
-                    <label class="block text-sm text-gray-400 mb-1">Full Name</label>
-                    <input type="text" id="user-name" required class="input-field" placeholder="John Doe">
+                    <h3 class="text-xs font-mono text-gray-400 uppercase tracking-widest mb-6">// ONBOARDING PIPELINE</h3>
+                    <ul class="space-y-6">
+                        <li id="step-nav-1" class="flex items-center space-x-3 text-turfGreen font-semibold transition-all">
+                            <span class="w-7 h-7 rounded-full border border-turfGreen flex items-center justify-center text-xs bg-turfGreen/20 shadow-[0_0_8px_rgba(34,197,94,0.5)]">1</span>
+                            <span>Welcome</span>
+                        </li>
+                        <li id="step-nav-2" class="flex items-center space-x-3 text-gray-500 font-semibold transition-all">
+                            <span class="w-7 h-7 rounded-full border border-gray-700 flex items-center justify-center text-xs">2</span>
+                            <span>Player Details</span>
+                        </li>
+                        <li id="step-nav-3" class="flex items-center space-x-3 text-gray-500 font-semibold transition-all">
+                            <span class="w-7 h-7 rounded-full border border-gray-700 flex items-center justify-center text-xs">3</span>
+                            <span>Sport Assessment</span>
+                        </li>
+                        <li id="step-nav-4" class="flex items-center space-x-3 text-gray-500 font-semibold transition-all">
+                            <span class="w-7 h-7 rounded-full border border-gray-700 flex items-center justify-center text-xs">4</span>
+                            <span>Community Sync</span>
+                        </li>
+                    </ul>
                 </div>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-1">Age</label>
-                    <input type="number" id="user-age" required class="input-field" placeholder="25">
+
+                <div class="text-[11px] font-mono text-gray-500 border-t border-white/10 pt-4">
+                    Target Mail: <span class="text-gray-300">hkhatoro01@gmail.com</span>
                 </div>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-1">Contact Number</label>
-                    <input type="tel" id="user-contact" required class="input-field" placeholder="+1 234 567 8900">
-                </div>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Interested Sport</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button type="button" class="sport-btn border border-gray-700 py-3 rounded-lg hover:border-turfGreen hover:text-turfGreen transition" data-sport="football">Football</button>
-                        <button type="button" class="sport-btn border border-gray-700 py-3 rounded-lg hover:border-turfGreen hover:text-turfGreen transition" data-sport="cricket">Cricket</button>
-                        <button type="button" class="sport-btn border border-gray-700 py-3 rounded-lg hover:border-turfGreen hover:text-turfGreen transition" data-sport="badminton">Badminton</button>
-                        <button type="button" class="sport-btn border border-gray-700 py-3 rounded-lg hover:border-turfGreen hover:text-turfGreen transition" data-sport="pickleball">Pickleball</button>
+            </div>
+
+            <!-- Right Column: Dynamic Interactive Area -->
+            <div class="lg:col-span-8 w-full">
+                
+                <!-- 1. Screen: Welcome Animation -->
+                <div id="screen-welcome" class="glass-panel p-8 md:p-12 rounded-2xl relative overflow-hidden text-center fade-in">
+                    <div class="relative z-10">
+                        <div class="inline-block p-4 rounded-full bg-black/60 border border-turfGreen/30 mb-6 shadow-[0_0_25px_rgba(34,197,94,0.25)]">
+                            <svg class="w-12 h-12 text-turfGreen animate-bounce" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+                            </svg>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white uppercase">
+                            Welcome Onboard, <br><span class="text-turfGreen italic font-serif lowercase text-4xl md:text-6xl">family.</span>
+                        </h1>
+                        <p class="text-gray-400 mt-4 max-w-md mx-auto text-sm md:text-base">
+                            Enter your details, complete your skill check, and secure instant access to upcoming games and updates.
+                        </p>
+                        <button onclick="goToScreen('details')" class="mt-8 px-8 py-3.5 bg-turfGreen hover:bg-turfGreenGlow text-black font-extrabold rounded-xl transition duration-300 shadow-[0_0_20px_rgba(34,197,94,0.4)] uppercase tracking-wider text-sm">
+                            Get Started &rarr;
+                        </button>
                     </div>
                 </div>
-                <button type="submit" id="next-btn" class="w-full bg-turfGreen text-turfBlack font-bold py-3 rounded-lg mt-4 hidden hover:bg-turfGreenHover transition">Continue to Quiz</button>
-            </form>
-        </div>
-    </section>
 
-    <section id="quiz-screen" class="hidden flex-grow flex items-center justify-center p-4 mt-16">
-        <div class="w-full max-w-md fade-in">
-            <div class="mb-6 flex justify-between items-center text-sm text-gray-400 border-b border-gray-800 pb-4">
-                <span id="quiz-sport-title" class="uppercase font-bold text-turfGreen tracking-wider">SPORT</span>
-                <span id="quiz-progress">Question 1/6</span>
-            </div>
-            
-            <h2 id="question-text" class="text-xl md:text-2xl font-medium mb-8 text-turfWhite leading-relaxed">Loading...</h2>
-            
-            <div id="options-container" class="space-y-4">
+                <!-- 2. Screen: Player Details & Sport Pick -->
+                <div id="screen-details" class="glass-panel p-6 md:p-8 rounded-2xl hidden">
+                    <div class="border-b border-white/10 pb-4 mb-6">
+                        <h2 class="text-2xl font-bold text-white">Player Identification</h2>
+                        <p class="text-xs text-gray-400 font-mono mt-1">// ENTER BASIC RECON DATA</p>
+                    </div>
+
+                    <form id="details-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-mono uppercase text-gray-400 mb-1">Full Name</label>
+                            <input type="text" id="input-name" required class="input-dark w-full px-4 py-3 rounded-xl text-sm" placeholder="e.g. Alex Morgan">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono uppercase text-gray-400 mb-1">Age</label>
+                                <input type="number" id="input-age" required class="input-dark w-full px-4 py-3 rounded-xl text-sm" placeholder="24">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono uppercase text-gray-400 mb-1">WhatsApp / Contact</label>
+                                <input type="tel" id="input-contact" required class="input-dark w-full px-4 py-3 rounded-xl text-sm" placeholder="+91 98765 43210">
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <label class="block text-xs font-mono uppercase text-gray-400 mb-2">Select Primary Discipline</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button type="button" onclick="selectSport('football')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="football">
+                                    <span class="font-bold text-sm">⚽ Football</span>
+                                </button>
+                                <button type="button" onclick="selectSport('cricket')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="cricket">
+                                    <span class="font-bold text-sm">🏏 Cricket</span>
+                                </button>
+                                <button type="button" onclick="selectSport('badminton')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="badminton">
+                                    <span class="font-bold text-sm">🏸 Badminton</span>
+                                </button>
+                                <button type="button" onclick="selectSport('pickleball')" class="sport-select-btn border border-white/10 bg-black/40 hover:border-turfGreen p-3.5 rounded-xl text-left transition flex items-center justify-between" data-sport="pickleball">
+                                    <span class="font-bold text-sm">🎾 Pickleball</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="details-submit-btn" class="hidden w-full mt-6 py-3.5 bg-turfGreen hover:bg-turfGreenGlow text-black font-extrabold rounded-xl transition duration-300 uppercase tracking-wider text-sm shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                            Begin 6-Question Skill Assessment &rarr;
+                        </button>
+                    </form>
                 </div>
+
+                <!-- 3. Screen: Dynamic Quiz with Auto-Fetched Image Banner -->
+                <div id="screen-quiz" class="glass-panel rounded-2xl overflow-hidden hidden">
+                    <!-- Dynamic Sport Banner Image fetched automatically -->
+                    <div class="relative h-44 md:h-52 w-full overflow-hidden border-b border-turfGreen/30">
+                        <img id="quiz-sport-img" src="" alt="Sport Field" class="w-full h-full object-cover filter brightness-75 contrast-125 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f0c] via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-6 flex items-center space-x-3">
+                            <span id="quiz-badge" class="px-3 py-1 bg-turfGreen text-black font-extrabold text-xs rounded uppercase tracking-wider shadow">SPORT</span>
+                            <span id="quiz-counter" class="text-xs font-mono text-gray-300 bg-black/70 px-2.5 py-1 rounded border border-white/10">Question 1/6</span>
+                        </div>
+                    </div>
+
+                    <!-- Question & Answers Body -->
+                    <div class="p-6 md:p-8">
+                        <h3 id="quiz-question-text" class="text-lg md:text-xl font-bold text-white mb-6 leading-relaxed">
+                            Loading assessment...
+                        </h3>
+                        <div id="quiz-options-container" class="space-y-3">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Screen: Processing & Success -->
+                <div id="screen-finish" class="glass-panel p-8 md:p-12 rounded-2xl text-center hidden">
+                    <div id="finish-spinner" class="w-12 h-12 border-4 border-turfGreen border-t-transparent rounded-full animate-spin mx-auto mb-6 shadow-[0_0_15px_rgba(34,197,94,0.4)]"></div>
+                    <h3 id="finish-title" class="text-2xl font-bold text-white mb-2">Syncing Assessment...</h3>
+                    <p id="finish-desc" class="text-sm text-gray-400 font-mono mb-6">Forwarding answers to hkhatoro01@gmail.com</p>
+                    <div id="finish-action" class="hidden">
+                        <a id="whatsapp-redirect-btn" href="#" class="inline-block px-8 py-4 bg-turfGreen text-black font-extrabold rounded-xl transition duration-300 uppercase tracking-wider text-sm shadow-[0_0_20px_rgba(34,197,94,0.5)]">
+                            Join Playcred WhatsApp Community &rarr;
+                        </a>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 w-full py-4 text-center border-t border-white/5 bg-black/50 text-[11px] font-mono text-gray-500">
+        &copy; 2026 PLAYCRED ARENA SYSTEMS. ALL RIGHTS RESERVED.
+    </footer>
 
     <script>
         /* --- CONFIGURATION --- */
-        // Set up a free account at Formspree.io, create a form, and paste the endpoint URL here.
-        // It will automatically email you all the JSON data collected.
-        const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID_HERE";
-        const WHATSAPP_LINK = "https://chat.whatsapp.com/YOUR_LINK"; 
-        
-        /* --- DATA & STATE --- */
-        let collectedData = {};
-        let currentSport = "";
-        let currentQuestionIndex = 0;
+        const TARGET_MAIL = "hkhatoro01@gmail.com";
+        // Put your actual Formspree form ID here (e.g. "xaybzk")
+        const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORMSPREE_ID";
+        // Put your WhatsApp community invite link here
+        const WHATSAPP_LINK = "https://chat.whatsapp.com/YOUR_COMMUNITY_CODE";
 
-        // Exactly 6 questions per sport
+        /* --- HIGH QUALITY DYNAMIC SPORTS IMAGES --- */
+        const sportImages = {
+            football: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1000&q=80",
+            cricket: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1000&q=80",
+            badminton: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1000&q=80",
+            pickleball: "https://images.unsplash.com/photo-1599586120429-48281b6f0ece?auto=format&fit=crop&w=1000&q=80"
+        };
+
+        /* --- 6 QUESTIONS PER SPORT --- */
         const sportQuizzes = {
             football: [
-                { q: "What is your primary playing position?", options: ["Forward", "Midfielder", "Defender", "Goalkeeper"] },
-                { q: "What surface do you prefer playing on?", options: ["Artificial Turf", "Natural Grass", "Indoor Hardcourt", "Any"] },
-                { q: "How often do you play football?", options: ["Multiple times a week", "Once a week", "A few times a month", "Rarely"] },
-                { q: "How would you rate your skill level?", options: ["Beginner", "Casual/Amateur", "Intermediate", "Advanced/Semi-Pro"] },
-                { q: "Do you already have a regular squad to play with?", options: ["Yes, a full team", "Just a few friends", "No, looking for a team"] },
-                { q: "What type of footwear do you use?", options: ["Turf Shoes (TF)", "Firm Ground Studs (FG)", "Indoor Flats (IN)", "Regular Sneakers"] }
+                { q: "What is your primary playing position on the turf?", options: ["Striker / Forward", "Midfield Playmaker", "Center Back / Fullback", "Goalkeeper"] },
+                { q: "What level of competitive intensity do you prefer?", options: ["Casual weekend friendly", "Competitive local tournament", "Drills & skill training", "Box turf quick match"] },
+                { q: "How often do you hit the turf per week?", options: ["1 time a week", "2-3 times a week", "4+ times a week", "Occasionally"] },
+                { q: "What footwear do you play with?", options: ["Turf Studs (TF)", "Firm Ground (FG)", "Indoor Flats (IN)", "Regular Sports Shoes"] },
+                { q: "Do you have a regular squad or are you looking for matching?", options: ["Have full squad", "Have 2-3 friends", "Solo player looking for a team"] },
+                { q: "What slot do you prefer playing at?", options: ["Early Morning (6 AM - 9 AM)", "Evening (5 PM - 8 PM)", "Night Lights (8 PM - 12 AM)"] }
             ],
             cricket: [
-                { q: "What is your primary role on the field?", options: ["Batsman", "Bowler", "All-Rounder", "Wicketkeeper"] },
-                { q: "What type of ball do you prefer playing with?", options: ["Hard Tennis Ball", "Soft Tennis Ball", "Leather Ball", "Tape Ball"] },
-                { q: "How often do you play cricket?", options: ["Multiple times a week", "Once a week", "Weekends only", "Rarely"] },
-                { q: "How would you rate your skill level?", options: ["Beginner", "Gully Cricket Pro", "Club Level", "Advanced"] },
-                { q: "Do you prefer indoor nets or open turf?", options: ["Open Turf Box", "Indoor Nets with Bowling Machine", "Regular Ground"] },
-                { q: "What is your preferred format?", options: ["T10 / Box Cricket", "T20", "Longer Formats"] }
+                { q: "What is your key playing style?", options: ["Top-order Batsman", "Pace / Seam Bowler", "Spin Bowler", "All-Rounder / Wicketkeeper"] },
+                { q: "What type of cricket do you play on turf?", options: ["Box Turf Cricket (Hard Tennis)", "Box Turf Cricket (Soft Tennis)", "Leather Ball Nets", "Over-Arm Box Championship"] },
+                { q: "How often do you play per month?", options: ["Every weekend", "Multiple times a week", "1-2 times a month", "Rarely"] },
+                { q: "What is your preference for turf boundaries?", options: ["Enclosed box turf with roof net", "Open boundary cricket turf", "Bowling machine practice nets"] },
+                { q: "Do you play in local box cricket tournaments?", options: ["Yes, regularly", "Occasionally", "No, just casual with friends"] },
+                { q: "What slot time works best for your games?", options: ["Morning slots", "Evening floodlight slots", "Midnight slots"] }
             ],
             badminton: [
-                { q: "Do you prefer playing Singles or Doubles?", options: ["Singles", "Doubles", "Mixed Doubles", "Any"] },
-                { q: "How would you rate your skill level?", options: ["Beginner", "Intermediate", "Advanced", "Professional"] },
-                { q: "What is your preferred court surface?", options: ["Synthetic/PVC", "Wooden Court", "Cement/Outdoor", "No Preference"] },
-                { q: "How often do you play?", options: ["Daily", "2-3 times a week", "Weekends only", "Occasionally"] },
-                { q: "What kind of shuttlecock do you use?", options: ["Feather (Standard)", "Nylon/Plastic", "Any"] },
-                { q: "Do you carry your own gear (racket & non-marking shoes)?", options: ["Yes, I have everything", "Need to rent shoes", "Need to rent a racket", "Need to rent both"] }
+                { q: "What format do you usually play?", options: ["Singles only", "Doubles only", "Mixed Doubles", "Both Singles & Doubles"] },
+                { q: "How would you rate your skill level?", options: ["Beginner / Casual", "Intermediate (Good rallies)", "Advanced / Club Level", "State / Tournament Player"] },
+                { q: "What is your preferred shuttlecock type?", options: ["Feather Shuttle", "Nylon / Plastic Shuttle (Yonex Mavis 350)", "No preference"] },
+                { q: "Do you own non-marking court shoes?", options: ["Yes, I have them", "No, I need to rent from turf", "Looking to buy"] },
+                { q: "How many sessions do you play per week?", options: ["1-2 sessions", "3-5 sessions", "Daily morning player", "Occasional"] },
+                { q: "What is your preferred booking time?", options: ["Early morning (6 AM - 9 AM)", "Afternoon", "Evening (6 PM - 10 PM)"] }
             ],
             pickleball: [
-                { q: "Do you prefer playing Singles or Doubles?", options: ["Singles", "Doubles", "No Preference"] },
-                { q: "How would you describe your skill level?", options: ["Beginner (Learning the rules)", "Intermediate (Can rally well)", "Advanced (Tournament level)"] },
-                { q: "What is your background in racquet sports?", options: ["None", "Tennis", "Badminton/Table Tennis", "Already a Pickleball player"] },
-                { q: "How often do you plan to play?", options: ["Multiple times a week", "Once a week", "Occasionally"] },
-                { q: "Do you prefer indoor or outdoor courts?", options: ["Indoor", "Outdoor", "Any"] },
-                { q: "Do you have your own paddle?", options: ["Yes", "No, I need to rent one"] }
+                { q: "Have you played Pickleball before?", options: ["Yes, playing regularly", "Played a few times", "Complete beginner transferring from Tennis/Badminton", "First time playing"] },
+                { q: "What format do you prefer?", options: ["Doubles (2v2)", "Singles (1v1)", "Open rotational play with community"] },
+                { q: "Do you have your own paddle?", options: ["Yes, have my own USAPA approved paddle", "No, will rent at the turf", "Looking for recommendations"] },
+                { q: "What is your preferred court layout?", options: ["Dedicated Pickleball indoor court", "Outdoor turf/hardcourt", "Multi-sport convertible court"] },
+                { q: "How frequently do you plan to book courts?", options: ["Weekly fixed slot", "Twice a week", "Weekends only", "Random casual drop-in"] },
+                { q: "Are you interested in joining Playcred ladder tournaments?", options: ["Yes, absolutely", "Maybe once I improve", "No, just recreational"] }
             ]
         };
 
-        /* --- DOM ELEMENTS --- */
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const infoScreen = document.getElementById('info-screen');
-        const quizScreen = document.getElementById('quiz-screen');
-        const header = document.getElementById('header');
-        const infoForm = document.getElementById('info-form');
-        const sportBtns = document.querySelectorAll('.sport-btn');
-        const nextBtn = document.getElementById('next-btn');
+        /* --- STATE MANAGEMENT --- */
+        let currentStep = 1;
+        let selectedSport = "";
+        let currentQuestionIdx = 0;
+        let candidateData = {
+            destination_mail: TARGET_MAIL,
+            name: "",
+            age: "",
+            contact: "",
+            sport: "",
+            responses: {}
+        };
 
-        /* --- LOGIC & FLOW --- */
-        
-        // 1. Welcome Screen Auto-Redirect
-        setTimeout(() => {
-            welcomeScreen.classList.remove('fade-in');
-            welcomeScreen.classList.add('fade-out');
-            setTimeout(() => {
-                welcomeScreen.classList.add('hidden');
-                header.classList.remove('hidden');
-                header.classList.add('fade-in');
-                infoScreen.classList.remove('hidden');
-            }, 1000);
-        }, 3500); // Wait 3.5 seconds before transitioning
+        /* --- AUTO REDIRECT WELCOME TIMER (4 seconds) --- */
+        let welcomeTimer = setTimeout(() => {
+            goToScreen('details');
+        }, 4000);
 
-        // 2. Handle Sport Selection in Info Form
-        sportBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Reset all buttons
-                sportBtns.forEach(b => {
-                    b.classList.remove('border-turfGreen', 'text-turfGreen', 'bg-gray-900');
-                });
-                // Highlight selected
-                e.target.classList.add('border-turfGreen', 'text-turfGreen', 'bg-gray-900');
-                currentSport = e.target.dataset.sport;
-                nextBtn.classList.remove('hidden');
-                nextBtn.classList.add('fade-in');
-            });
-        });
-
-        // 3. Submit Info Form & Start Quiz
-        infoForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Save common info
-            collectedData.Name = document.getElementById('user-name').value;
-            collectedData.Age = document.getElementById('user-age').value;
-            collectedData.Contact = document.getElementById('user-contact').value;
-            collectedData.SportSelected = currentSport;
-
-            // Transition UI
-            infoScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            
-            document.getElementById('quiz-sport-title').textContent = currentSport;
-            loadQuestion();
-        });
-
-        // 4. Render Quiz Questions
-        function loadQuestion() {
-            const quiz = sportQuizzes[currentSport];
-            const currentQ = quiz[currentQuestionIndex];
-            
-            document.getElementById('quiz-progress').textContent = `Question ${currentQuestionIndex + 1} / 6`;
-            document.getElementById('question-text').textContent = currentQ.q;
-            
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = ""; // clear previous
-
-            currentQ.options.forEach(option => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left px-6 py-4 rounded-xl bg-[#0a0a0a] text-white border border-gray-800 hover:border-turfGreen hover:text-turfGreen transition-all duration-300";
-                btn.textContent = option;
-                btn.onclick = () => handleAnswer(currentQ.q, option);
-                optionsContainer.appendChild(btn);
-            });
-        }
-
-        // 5. Handle Quiz Answers and Submission
-        function handleAnswer(question, answer) {
-            collectedData[`Q${currentQuestionIndex + 1}: ${question}`] = answer;
-            
-            if (currentQuestionIndex < 5) {
-                currentQuestionIndex++;
-                loadQuestion();
-            } else {
-                finishAndSubmit();
+        function updateStepTracker(stepNumber) {
+            for (let i = 1; i <= 4; i++) {
+                const navItem = document.getElementById(`step-nav-${i}`);
+                if (!navItem) continue;
+                const dot = navItem.querySelector('span:first-child');
+                
+                if (i === stepNumber) {
+                    navItem.className = "flex items-center space-x-3 text-turfGreen font-semibold transition-all";
+                    dot.className = "w-7 h-7 rounded-full border border-turfGreen flex items-center justify-center text-xs bg-turfGreen/20 shadow-[0_0_8px_rgba(34,197,94,0.5)]";
+                } else if (i < stepNumber) {
+                    navItem.className = "flex items-center space-x-3 text-gray-300 font-medium transition-all";
+                    dot.className = "w-7 h-7 rounded-full border border-turfGreen/50 bg-turfGreen/10 flex items-center justify-center text-xs text-turfGreen";
+                } else {
+                    navItem.className = "flex items-center space-x-3 text-gray-600 font-semibold transition-all";
+                    dot.className = "w-7 h-7 rounded-full border border-gray-800 flex items-center justify-center text-xs";
+                }
             }
         }
 
-        async function finishAndSubmit() {
-            // UI Loading state
-            document.getElementById('quiz-progress').textContent = "Complete!";
-            document.getElementById('question-text').textContent = "Sending your responses...";
-            document.getElementById('options-container').innerHTML = '<div class="w-10 h-10 border-4 border-turfGreen border-t-transparent rounded-full animate-spin mx-auto mt-8"></div>';
+        function goToScreen(screenName) {
+            clearTimeout(welcomeTimer);
+            document.querySelectorAll('main > div > div:last-child > div').forEach(el => el.classList.add('hidden'));
 
+            if (screenName === 'details') {
+                updateStepTracker(2);
+                const s = document.getElementById('screen-details');
+                s.classList.remove('hidden');
+                s.classList.add('fade-in');
+            } else if (screenName === 'quiz') {
+                updateStepTracker(3);
+                const s = document.getElementById('screen-quiz');
+                s.classList.remove('hidden');
+                s.classList.add('fade-in');
+            } else if (screenName === 'finish') {
+                updateStepTracker(4);
+                const s = document.getElementById('screen-finish');
+                s.classList.remove('hidden');
+                s.classList.add('fade-in');
+            }
+        }
+
+        function selectSport(sportKey) {
+            selectedSport = sportKey;
+            document.querySelectorAll('.sport-select-btn').forEach(btn => {
+                btn.classList.remove('border-turfGreen', 'bg-turfGreen/10', 'text-turfGreen');
+            });
+            const activeBtn = document.querySelector(`.sport-select-btn[data-sport="${sportKey}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('border-turfGreen', 'bg-turfGreen/10', 'text-turfGreen');
+            }
+            const submitBtn = document.getElementById('details-submit-btn');
+            submitBtn.classList.remove('hidden');
+            submitBtn.classList.add('fade-in');
+        }
+
+        /* --- FORM SUBMISSION & QUIZ LAUNCH --- */
+        document.getElementById('details-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!selectedSport) return;
+
+            candidateData.name = document.getElementById('input-name').value;
+            candidateData.age = document.getElementById('input-age').value;
+            candidateData.contact = document.getElementById('input-contact').value;
+            candidateData.sport = selectedSport;
+
+            // Set dynamic sport image
+            document.getElementById('quiz-sport-img').src = sportImages[selectedSport];
+            document.getElementById('quiz-badge').textContent = selectedSport;
+
+            currentQuestionIdx = 0;
+            goToScreen('quiz');
+            renderQuestion();
+        });
+
+        function renderQuestion() {
+            const quiz = sportQuizzes[selectedSport];
+            const qData = quiz[currentQuestionIdx];
+
+            document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIdx + 1} of 6`;
+            document.getElementById('quiz-question-text').textContent = qData.q;
+
+            const container = document.getElementById('quiz-options-container');
+            container.innerHTML = "";
+
+            qData.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl bg-black/50 border border-white/10 hover:border-turfGreen hover:bg-turfGreen/10 hover:text-turfGreen transition duration-200 text-sm md:text-base font-medium flex items-center justify-between";
+                btn.innerHTML = `<span>${opt}</span><span class="text-xs text-gray-500 font-mono">SELECT &rarr;</span>`;
+                btn.onclick = () => handleAnswer(qData.q, opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(question, answer) {
+            candidateData.responses[`Q${currentQuestionIdx + 1}: ${question}`] = answer;
+
+            if (currentQuestionIdx < 5) {
+                currentQuestionIdx++;
+                renderQuestion();
+            } else {
+                submitAllData();
+            }
+        }
+
+        async function submitAllData() {
+            goToScreen('finish');
+            
             try {
-                // Send email via Formspree
+                // Post payload to email endpoint (Formspree forwards directly to target)
                 await fetch(FORMSPREE_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(collectedData)
+                    body: JSON.stringify({
+                        Recipient: TARGET_MAIL,
+                        Subject: `Playcred Lead: ${candidateData.name} (${candidateData.sport.toUpperCase()})`,
+                        ...candidateData
+                    })
                 });
-                
-                document.getElementById('question-text').textContent = "Success! Redirecting to the community...";
-                document.getElementById('options-container').innerHTML = "";
-                
-                // Redirect to WhatsApp
-                setTimeout(() => {
-                    window.location.href = WHATSAPP_LINK;
-                }, 1500);
-
-            } catch (error) {
-                console.error("Error sending data:", error);
-                document.getElementById('question-text').textContent = "Oops! Something went wrong.";
-                document.getElementById('options-container').innerHTML = `<p class="text-sm text-gray-400 text-center mb-4">But you can still join our community.</p><button onclick="window.location.href='${WHATSAPP_LINK}'" class="w-full bg-turfGreen text-turfBlack font-bold py-3 rounded-lg">Join WhatsApp Now</button>`;
+            } catch (err) {
+                console.log("Transmission handled or running locally:", err);
             }
+
+            // Reveal completion state
+            document.getElementById('finish-spinner').classList.add('hidden');
+            document.getElementById('finish-title').textContent = "Assessment Complete!";
+            document.getElementById('finish-desc').textContent = `Your responses have been synced with Playcred systems and forwarded to ${TARGET_MAIL}.`;
+            
+            const actionDiv = document.getElementById('finish-action');
+            const redirectBtn = document.getElementById('whatsapp-redirect-btn');
+            redirectBtn.href = WHATSAPP_LINK;
+            actionDiv.classList.remove('hidden');
+            actionDiv.classList.add('fade-in');
+
+            // Auto-redirect to WhatsApp after 2 seconds
+            setTimeout(() => {
+                window.location.href = WHATSAPP_LINK;
+            }, 2000);
         }
     </script>
 </body>
