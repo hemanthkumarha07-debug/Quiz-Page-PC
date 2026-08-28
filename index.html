@@ -33,6 +33,26 @@
             overflow-x: hidden;
         }
 
+        /* --- 1. INDEPENDENT SPLASH SCREEN ANIMATION --- */
+        .animate-splash-logo {
+            animation: splashLogo 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes splashLogo {
+            0% { opacity: 0; transform: scale(0.7); filter: blur(12px); }
+            25% { opacity: 1; transform: scale(1); filter: blur(0px); }
+            75% { opacity: 1; transform: scale(1.05); filter: blur(0px); }
+            100% { opacity: 0; transform: scale(1.2); filter: blur(12px); }
+        }
+
+        /* --- 2. MOTION POSTER ANIMATION --- */
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+        .animate-slow-zoom {
+            animation: slowZoom 6s linear forwards;
+        }
+
         /* Dynamic Full-Screen Image Background */
         #dynamic-bg {
             position: fixed;
@@ -69,32 +89,14 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
-        /* NEW: Cinematic Logo Intro Sequence */
-        .animate-cinematic-logo {
-            opacity: 0;
-            animation: cinematicLogo 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        
-        .animate-content-delayed {
-            opacity: 0;
-            animation: slideUpFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) 2.6s forwards;
-        }
-
-        @keyframes cinematicLogo {
-            0% { opacity: 0; transform: scale(0.6); filter: blur(10px); }
-            20% { opacity: 1; transform: scale(1); filter: blur(0px); }
-            80% { opacity: 1; transform: scale(1.05); filter: blur(0px); }
-            100% { opacity: 0; transform: scale(1.15); filter: blur(10px); }
-        }
+        /* UI Fade In */
+        .fade-in { animation: slideUpFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .hidden { display: none !important; }
 
         @keyframes slideUpFadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Standard Fade-in for other screens */
-        .fade-in { animation: slideUpFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .hidden { display: none !important; }
 
         /* Ultra-clean Input Fields */
         .input-pro {
@@ -119,6 +121,35 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-turfGreen selection:text-black relative">
 
+    <!-- ========================================== -->
+    <!-- 1. INDEPENDENT PRE-LOADER SPLASH SCREEN    -->
+    <!-- ========================================== -->
+    <div id="splash-screen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center transition-opacity duration-1000">
+        <img src="PClogo.png" alt="Playcred" class="w-40 sm:w-56 animate-splash-logo drop-shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. EARLY ACCESS MOTION POSTER (Hidden)     -->
+    <!-- ========================================== -->
+    <div id="screen-early-access" class="hidden fixed inset-0 z-[90] bg-black">
+        <!-- Cinematic Football Kicking Image with Slow Zoom -->
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=2500&q=80')] bg-cover bg-center animate-slow-zoom opacity-50"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+        
+        <!-- Typography overlay -->
+        <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+            <h2 class="font-techno text-4xl md:text-6xl text-white uppercase font-black tracking-widest drop-shadow-2xl mb-2">Stay Tuned</h2>
+            <h3 class="font-techno text-lg md:text-2xl text-turfGreen uppercase tracking-[0.3em] drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] mb-12">For Early Access Benefits</h3>
+            
+            <div class="w-10 h-10 border-2 border-white/20 border-t-turfGreen rounded-full animate-spin shadow-[0_0_15px_rgba(34,197,94,0.3)]"></div>
+            <p class="font-sans text-gray-400 mt-6 text-xs uppercase tracking-widest font-medium">Opening secure comms channel...</p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MAIN APPLICATION INTERFACE                 -->
+    <!-- ========================================== -->
+    
     <!-- Dynamic Background Layer -->
     <div id="dynamic-bg"></div>
 
@@ -144,7 +175,7 @@
     </header>
 
     <!-- Main Content: Centered Glass Interface -->
-    <main class="relative z-10 flex-grow flex items-center justify-center p-4 sm:p-8">
+    <main class="relative z-10 flex-grow flex items-center justify-center p-4 sm:p-8 opacity-0 transition-opacity duration-1000" id="main-content-wrapper">
         <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden relative shadow-2xl">
             
             <!-- Center Background Logo Watermark -->
@@ -163,27 +194,18 @@
 
             <div class="p-8 sm:p-12 relative z-20">
                 
-                <!-- SCREEN 1: Welcome (With Cinematic Intro) -->
-                <div id="screen-welcome" class="text-center relative flex flex-col justify-center items-center min-h-[250px] sm:min-h-[300px]">
-                    
-                    <!-- 1. Large Logo fades in, holds, and fades out -->
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
-                        <img src="PClogo.png" alt="Playcred Arena" class="w-40 sm:w-56 animate-cinematic-logo drop-shadow-[0_0_25px_rgba(34,197,94,0.5)]">
-                    </div>
-                    
-                    <!-- 2. Content & Button pops up right after logo fades -->
-                    <div class="animate-content-delayed w-full relative z-10">
-                        <h1 class="font-techno text-4xl sm:text-5xl font-bold tracking-wider text-white uppercase mb-4 shadow-black drop-shadow-2xl">
-                            Welcome to the <br><span class="text-turfGreen drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">Arena</span>
-                        </h1>
-                        <p class="font-sans text-gray-300 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed drop-shadow-md">
-                            Secure your player profile, calibrate your skill level, and gain exclusive access to the community.
-                        </p>
-                        <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.5)] relative overflow-hidden group">
-                            <span class="relative z-10">Initialize Profile</span>
-                            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                        </button>
-                    </div>
+                <!-- SCREEN 1: Welcome -->
+                <div id="screen-welcome" class="text-center fade-in">
+                    <h1 class="font-techno text-4xl sm:text-5xl font-bold tracking-wider text-white uppercase mb-4 shadow-black drop-shadow-2xl">
+                        Welcome to the <br><span class="text-turfGreen drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]">Arena</span>
+                    </h1>
+                    <p class="font-sans text-gray-300 text-sm sm:text-base font-light max-w-md mx-auto mb-10 leading-relaxed drop-shadow-md">
+                        Secure your player profile, calibrate your skill level, and gain exclusive access to the community.
+                    </p>
+                    <button onclick="goToScreen('details')" class="font-techno bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.5)] relative overflow-hidden group">
+                        <span class="relative z-10">Initialize Profile</span>
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    </button>
                 </div>
 
                 <!-- SCREEN 2: Details & Sport Selection -->
@@ -246,19 +268,12 @@
                     </div>
                 </div>
 
-                <!-- SCREEN 4: Processing / Success -->
+                <!-- SCREEN 4: Initial Processing (Syncing) -->
                 <div id="screen-finish" class="hidden text-center py-8">
                     <div id="finish-spinner" class="w-16 h-16 border-2 border-white/10 border-t-turfGreen rounded-full animate-spin mx-auto mb-8 shadow-[0_0_30px_rgba(34,197,94,0.3)]"></div>
                     
-                    <h3 id="finish-title" class="font-techno text-3xl font-bold text-white tracking-wide uppercase mb-3 drop-shadow-lg">Syncing Profile</h3>
-                    <p id="finish-desc" class="font-sans text-gray-300 font-light mb-10 drop-shadow-sm">Transmitting data to secure servers...</p>
-                    
-                    <div id="finish-action" class="hidden fade-in">
-                        <a id="whatsapp-redirect-btn" href="#" class="inline-block bg-turfGreen hover:bg-[#1eb053] text-black px-10 py-4 rounded-full font-techno font-bold tracking-widest uppercase text-sm transition-all hover:scale-105 shadow-[0_0_25px_rgba(34,197,94,0.5)] relative overflow-hidden group">
-                            <span class="relative z-10">Enter the Community</span>
-                            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                        </a>
-                    </div>
+                    <h3 class="font-techno text-3xl font-bold text-white tracking-wide uppercase mb-3 drop-shadow-lg">Syncing Profile</h3>
+                    <p class="font-sans text-gray-300 font-light mb-10 drop-shadow-sm">Transmitting data to secure servers...</p>
                 </div>
 
             </div>
@@ -266,7 +281,7 @@
     </main>
 
     <!-- Persistent Global Footer -->
-    <footer class="relative z-10 w-full bg-black/40 backdrop-blur-md border-t border-white/10 py-5 px-6 mt-auto">
+    <footer class="relative z-10 w-full bg-black/40 backdrop-blur-md border-t border-white/10 py-5 px-6 mt-auto opacity-0 transition-opacity duration-1000" id="global-footer">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
             <!-- Copyright -->
@@ -371,6 +386,20 @@
         const hudElements = document.getElementById('hud-elements');
         const ambientSweeps = document.getElementById('ambient-sweeps');
 
+        // --- MANAGE SPLASH SCREEN TIMING ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                
+                // Fade in main interface
+                document.getElementById('main-content-wrapper').style.opacity = '1';
+                document.getElementById('global-footer').style.opacity = '1';
+                
+                setTimeout(() => splash.remove(), 1000); // Remove from DOM after fade
+            }, 2600); // Wait for cinematic logo animation to finish
+        });
+
         function updateProgress(percentage) {
             progressBar.style.width = `${percentage}%`;
         }
@@ -379,15 +408,16 @@
             // Hide all screens cleanly
             ['welcome', 'details', 'quiz', 'finish'].forEach(s => {
                 const element = document.getElementById(`screen-${s}`);
-                element.classList.add('hidden');
-                element.classList.remove('fade-in');
+                if(element) {
+                    element.classList.add('hidden');
+                    element.classList.remove('fade-in');
+                }
             });
 
             // Show target screen
             const target = document.getElementById(`screen-${screenName}`);
-            target.classList.remove('hidden');
-            
-            if (screenName !== 'welcome') {
+            if(target) {
+                target.classList.remove('hidden');
                 target.classList.add('fade-in');
             }
 
@@ -489,6 +519,7 @@
         }
 
         async function submitAllData() {
+            // 1. Show the initial syncing screen inside the glass panel
             goToScreen('finish');
             
             try {
@@ -505,21 +536,18 @@
                 console.log("Local/Dev bypass:", err);
             }
 
-            // Success State
-            document.getElementById('finish-spinner').classList.add('hidden');
-            document.getElementById('finish-title').textContent = "Profile Initialized";
-            document.getElementById('finish-title').classList.add('text-turfGreen', 'drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]');
-            document.getElementById('finish-desc').textContent = "Data secured. Access granted.";
-            
-            const actionDiv = document.getElementById('finish-action');
-            const redirectBtn = document.getElementById('whatsapp-redirect-btn');
-            redirectBtn.href = WHATSAPP_LINK;
-            actionDiv.classList.remove('hidden');
-            
-            // Auto-redirect to WhatsApp after 2.5 seconds
+            // 2. Wait 2 seconds for dramatic effect, then trigger Early Access Motion Poster
             setTimeout(() => {
-                window.location.href = WHATSAPP_LINK;
-            }, 2500);
+                const earlyAccessScreen = document.getElementById('screen-early-access');
+                earlyAccessScreen.classList.remove('hidden');
+                earlyAccessScreen.classList.add('fade-in');
+
+                // 3. Wait 3.5 seconds on the motion poster, then drop them into WhatsApp
+                setTimeout(() => {
+                    window.location.href = WHATSAPP_LINK;
+                }, 3500);
+
+            }, 2000);
         }
     </script>
 </body>
